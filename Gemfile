@@ -16,7 +16,7 @@ gem 'puma', '3.11.2'
 group :development, :test do
     gem 'pry', '0.11.3'
     gem 'rspec-rails', '3.7.2'
-    gem 'factory_girl_rails', '4.9.0'
+    gem 'factory_bot_rails', '4.8.2'
     gem 'shoulda-matchers', '3.1.2'
     gem 'faker', '1.8.7'
     gem 'database_cleaner', '1.6.2'

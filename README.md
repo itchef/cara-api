@@ -14,3 +14,6 @@ This project represents the API of cara app.
 Create a role and database in **Postgres**.
 
 Add username as **CARA-API_DATABASE_USERNAME** and password as **CARA-API_DATABASE_PASSWORD** as environment variable. You can create a [`.env`](https://github.com/bkeepers/dotenv) as well on the project level to have environment variable.
+
+## License
+![GNU GPL V3](https://www.gnu.org/graphics/gplv3-127x51.png)

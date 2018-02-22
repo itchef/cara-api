@@ -1,5 +1,5 @@
 # Cara API is Rest APIs for Cara application which is a face cheat book for organisation
-# Copyright  (C) 2018  Kaustav Chakraborty(@phoenixTW)
+# Copyright  (C) 2018  Itchef
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
