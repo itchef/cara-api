@@ -1,14 +1,20 @@
-# Be sure to restart your server when you modify this file.
+# Cara API is Rest APIs for Cara application which is a face cheat book for organisation
+# Copyright  (C) 2018  ITChef
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see [https://www.gnu.org/licenses/](https://www.gnu.org/licenses/).
 
-# This file contains settings for ActionController::ParamsWrapper which
-# is enabled by default.
-
-# Enable parameter wrapping for JSON. You can disable this by setting :format to an empty array.
+# @author: Kaustav Chakraborty (@phoenixTW)
 ActiveSupport.on_load(:action_controller) do
-  wrap_parameters format: [:json]
+    wrap_parameters format: [:json]
 end
-
-# To enable root element in JSON for ActiveRecord objects.
-# ActiveSupport.on_load(:active_record) do
-#   self.include_root_in_json = true
-# end
