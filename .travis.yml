@@ -28,7 +28,7 @@ gemfile:
   - Gemfile
 
 before_script:
-  - psql -c 'CREATE USER cara_database_user WITH PASSWORD de02627f33d5adf20597d63942753418c86c6081;' -U postgres
+  - psql -c 'CREATE USER cara_database_user' -U postgres
   - psql -U postgres -c "create extension postgis"
 
 script:
