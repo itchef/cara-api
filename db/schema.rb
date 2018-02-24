@@ -15,21 +15,11 @@
 # along with this program.  If not, see [https://www.gnu.org/licenses/](https://www.gnu.org/licenses/).
 
 # @author: Kaustav Chakraborty (@phoenixTW)
-default: &default
-  adapter: postgresql
-  encoding: unicode
-  username: <%= ENV['CARA_API_DATABASE_USERNAME'] %>
-  password: <%= ENV['CARA_API_DATABASE_PASSWORD'] %>
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+#
+ # This file gets generated after a new migration added on the project.
+ActiveRecord::Schema.define(version: 0) do
 
-development:
-  <<: *default
-  database: cara-api_development
+    # These are extensions that must be enabled in order to support this database
+    enable_extension "plpgsql"
 
-test:
-  <<: *default
-  database: cara-api_test
-
-production:
-  <<: *default
-  database: <%= ENV['CARA_API_DATABASE_NAME'] %>
+end

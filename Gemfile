@@ -20,7 +20,6 @@ group :development, :test do
     gem 'shoulda-matchers', '3.1.2'
     gem 'faker', '1.8.7'
     gem 'database_cleaner', '1.6.2'
-    gem 'dotenv', '2.2.1'
 end
 
 group :development do

@@ -10,10 +10,27 @@ This project represents the API of cara app.
 * Rails = **5.1.5**
 * PostgreSQL = **10.0** 
 
-## Setup Database
-Create a role and database in **Postgres**.
+# Setup Application
 
-Add username as **CARA-API_DATABASE_USERNAME** and password as **CARA-API_DATABASE_PASSWORD** as environment variable. You can create a [`.env`](https://github.com/bkeepers/dotenv) as well on the project level to have environment variable.
+### Setup Environment Variables
+Setup the **ENVIRONMENT VARIABLES** in your .bashrc / .zshrc or any other preferable configuration file.
 
-## License
+| Variable | Description |
+| -------- | ----------- |
+| RAILS_ENV | Type of environment of your rails application. i.e. development, test, production |
+| CARA_API_DATABASE_USERNAME | Username or Role of your postgres database |
+| CARA_API_DATABASE_PASSWORD | Password of your postgres database |
+
+### Setup database
+Run this to setup ROLE for postgres database,
+```
+createuser -P -s -e $CARA_API_DATABASE_USERNAME
+```
+After you are done with the USER creation, run this following command from the project root directory
+```
+bin/rails db:create db:migrate
+```
+This command will create the database(s) for the application to use.
+
+# License
 ![GNU GPL V3](https://www.gnu.org/graphics/gplv3-127x51.png)
