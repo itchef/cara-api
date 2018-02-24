@@ -1,4 +1,6 @@
 # Cara API
+[![Build Status](https://travis-ci.org/itchef/cara-api.svg?branch=master)](https://travis-ci.org/itchef/cara-api)
+
 Cara is a simple face cheat sheet for various organisations like school, college and any other organisation. 
 
 Cara is not a data storage for people's profile, it just a simple visualisation having minimum contact details in it.
