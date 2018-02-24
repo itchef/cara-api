@@ -28,13 +28,16 @@ gemfile:
   - Gemfile
 
 before_script:
-  - psql -c 'DROP ROLE IF EXISTS $CARA_API_DATABASE_USERNAME;' -U postgres
-  - psql -c 'CREATE USER $CARA_API_DATABASE_USERNAME WITH PASSWORD $CARA_API_DATABASE_PASSWORD CREATEDB;' -U postgres
+  - psql -c 'CREATE USER cara_database_user WITH PASSWORD de02627f33d5adf20597d63942753418c86c6081;' -U postgres
+  - psql -U postgres -c "create extension postgis"
 
 script:
   - RAILS_ENV=test bin/bundle install
-  - RAILS_ENV=test bin/rails db:drop:all db:create db:migrate
+  - RAILS_ENV=test bin/rails db:drop db:create db:migrate
   - bin/bundle exec rspec
 
+after_script:
+  - RAILS_ENV=test bin/rails db:drop db:create db:migrate
+  - psql -c 'DROP ROLE IF EXISTS cara_database_user;' -U postgres
 notifications:
   email: false
