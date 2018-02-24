@@ -21,9 +21,6 @@ install:
 
 addons:
   postgresql: "9.4"
-  apt:
-    packages:
-      - postgresql-9.4-postgis-2.1
 
 services:
   - postgresql
@@ -32,7 +29,6 @@ gemfile:
 
 before_script:
   - psql -c 'CREATE USER cara_database_user' -U postgres
-  - psql -U postgres -c "create extension postgis"
 
 script:
   - RAILS_ENV=test bin/bundle install
@@ -41,6 +37,6 @@ script:
 
 after_script:
   - RAILS_ENV=test bin/rails db:drop db:create db:migrate
-  - psql -c 'DROP ROLE IF EXISTS cara_database_user;' -U postgres
+  - dropuser $CARA_API_DATABASE_USERNAME -U postgres
 notifications:
   email: false
