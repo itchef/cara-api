@@ -16,6 +16,9 @@
 
 # @author: Kaustav Chakraborty (@phoenixTW)
 
-Rails.application.routes.draw do
-    resources :members
+class MembersController < ApplicationController
+    def index
+        @members = Member.all.map {|member| Oprah.present(member).json }
+        render json: @members
+    end
 end

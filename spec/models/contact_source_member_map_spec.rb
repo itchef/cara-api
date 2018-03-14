@@ -16,6 +16,8 @@
 
 # @author: Kaustav Chakraborty (@phoenixTW)
 
-Rails.application.routes.draw do
-    resources :members
+require 'rails_helper'
+
+RSpec.describe ContactSourceMemberMap, type: :model do
+    pending "add some examples to (or delete) #{__FILE__}"
 end

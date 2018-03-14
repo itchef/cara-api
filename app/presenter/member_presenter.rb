@@ -16,6 +16,20 @@
 
 # @author: Kaustav Chakraborty (@phoenixTW)
 
-Rails.application.routes.draw do
-    resources :members
+class MemberPresenter < Oprah::Presenter
+    presents_many :contact_source_member_maps
+
+    def json
+        {
+            name: name,
+            age: age,
+            place: place,
+            contacts: ContactSourceMemberMap
+                          .getContactListFor(id)
+                          .as_json(:except => :id),
+            phone_numbers: ContactSourceMemberMap
+                       .getPhoneNumbers(id)
+                       .as_json(:except => :id)
+        }
+    end
 end

@@ -16,6 +16,10 @@
 
 # @author: Kaustav Chakraborty (@phoenixTW)
 
-Rails.application.routes.draw do
-    resources :members
+FactoryBot.define do
+    factory :member do
+        name "MyString"
+        age ""
+        place "MyString"
+    end
 end

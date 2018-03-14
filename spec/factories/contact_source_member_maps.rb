@@ -16,6 +16,10 @@
 
 # @author: Kaustav Chakraborty (@phoenixTW)
 
-Rails.application.routes.draw do
-    resources :members
+FactoryBot.define do
+    factory :contact_source_member_map do
+        member nil
+        contact_source nil
+        value "MyString"
+    end
 end

@@ -16,6 +16,12 @@
 
 # @author: Kaustav Chakraborty (@phoenixTW)
 
-Rails.application.routes.draw do
-    resources :members
+class CreateContactSources < ActiveRecord::Migration[5.1]
+    def change
+        create_table :contact_sources do |t|
+            t.string :name, :null => false
+
+            t.timestamps
+        end
+    end
 end

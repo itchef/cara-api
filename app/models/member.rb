@@ -16,6 +16,6 @@
 
 # @author: Kaustav Chakraborty (@phoenixTW)
 
-Rails.application.routes.draw do
-    resources :members
+class Member < ApplicationRecord
+    has_many :contact_source_member_maps
 end

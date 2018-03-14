@@ -16,6 +16,8 @@
 
 # @author: Kaustav Chakraborty (@phoenixTW)
 
-Rails.application.routes.draw do
-    resources :members
+FactoryBot.define do
+    factory :contact_source do
+        name "MyString"
+    end
 end

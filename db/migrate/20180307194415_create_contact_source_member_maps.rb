@@ -16,6 +16,14 @@
 
 # @author: Kaustav Chakraborty (@phoenixTW)
 
-Rails.application.routes.draw do
-    resources :members
+class CreateContactSourceMemberMaps < ActiveRecord::Migration[5.1]
+  def change
+    create_table :contact_source_member_maps do |t|
+      t.references :member, foreign_key: true
+      t.references :contact_source, foreign_key: true
+      t.string :value
+
+      t.timestamps
+    end
+  end
 end

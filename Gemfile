@@ -12,6 +12,10 @@ gem 'rails', '5.1.5'
 gem 'pg', '1.0.0'
 # Use Puma as the app server
 gem 'puma', '3.11.2'
+gem 'rack-cors', '1.0.2'
+
+# Presenter
+gem 'oprah', '0.3.0'
 
 group :development, :test do
     gem 'pry', '0.11.3'
