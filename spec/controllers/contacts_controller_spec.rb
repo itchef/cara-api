@@ -16,10 +16,15 @@
 
 # @author: Kaustav Chakraborty (@phoenixTW)
 
-class Member < ApplicationRecord
-    validates :name, presence: true
-    validates :age, presence: true
-    validates :place, presence: true
+require 'rails_helper'
 
-    has_many :contact_source_member_maps
+RSpec.describe ContactsController, type: :controller do
+
+    describe "GET #add" do
+        it "returns http success" do
+            get :add
+            expect(response).to have_http_status(:success)
+        end
+    end
+
 end

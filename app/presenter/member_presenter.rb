@@ -21,6 +21,7 @@ class MemberPresenter < Oprah::Presenter
 
     def json
         {
+            id: id,
             name: name,
             age: age,
             place: place,

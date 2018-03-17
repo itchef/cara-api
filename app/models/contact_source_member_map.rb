@@ -24,7 +24,7 @@ class ContactSourceMemberMap < ApplicationRecord
         ContactSourceMemberMap.select(
             [ContactSource.arel_table[:name], :value]
         ).where(
-            ContactSourceMemberMap.arel_table[:member_id].eq(member_id).and(ContactSource.arel_table[:name].not_eq('Phone'))
+            ContactSourceMemberMap.arel_table[:member_id].eq(member_id).and(ContactSource.arel_table[:name].not_eq('phone'))
         ).joins(
             ContactSourceMemberMap.arel_table.join(ContactSource.arel_table).on(ContactSourceMemberMap.arel_table[:contact_source_id].eq(ContactSource.arel_table[:id])).join_sources
         )
@@ -34,7 +34,7 @@ class ContactSourceMemberMap < ApplicationRecord
         ContactSourceMemberMap.select(
             [ContactSource.arel_table[:name], :value]
         ).where(
-            ContactSourceMemberMap.arel_table[:member_id].eq(member_id).and(ContactSource.arel_table[:name].eq('Phone'))
+            ContactSourceMemberMap.arel_table[:member_id].eq(member_id).and(ContactSource.arel_table[:name].eq('phone'))
         ).joins(
             ContactSourceMemberMap.arel_table.join(ContactSource.arel_table).on(ContactSourceMemberMap.arel_table[:contact_source_id].eq(ContactSource.arel_table[:id])).join_sources
         )

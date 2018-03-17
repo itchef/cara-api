@@ -17,8 +17,33 @@
 # @author: Kaustav Chakraborty (@phoenixTW)
 
 class MembersController < ApplicationController
+    before_action :set_topic, only: [:show]
+
     def index
         @members = Member.all.map {|member| Oprah.present(member).json }
         render json: @members
+    end
+
+    def show
+        render json: Oprah.present(@member).json
+    end
+
+    def create
+        member = Member.new(member_params)
+        if member.valid?
+            member.save
+            render json: member
+        else
+            render json: {message: 'Request Error. Member name / age / place can not be null.', detailed_message: member.errors.messages }, :status => :bad_request
+        end
+    end
+
+    private
+    def set_topic
+        @member = Member.find(params[:id])
+    end
+
+    def member_params
+        params.require(:personal).permit(:name, :age, :place)
     end
 end
