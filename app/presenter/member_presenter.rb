@@ -25,6 +25,7 @@ class MemberPresenter < Oprah::Presenter
             name: name,
             age: age,
             place: place,
+            photo_url: photo_url,
             contacts: ContactSourceMemberMap
                           .getContactListFor(id)
                           .as_json(:except => :id),
