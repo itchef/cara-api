@@ -16,8 +16,9 @@
 
 # @author: Kaustav Chakraborty (@phoenixTW)
 
-class AddProfilePhotoForMembers < ActiveRecord::Migration[5.1]
-    def change
-        add_column :members, :photo_url, :string
+FactoryBot.define do
+    factory :group do
+        name "MyString"
+        description "MyText"
     end
 end

@@ -16,8 +16,5 @@
 
 # @author: Kaustav Chakraborty (@phoenixTW)
 
-class AddProfilePhotoForMembers < ActiveRecord::Migration[5.1]
-    def change
-        add_column :members, :photo_url, :string
-    end
+class Group < ApplicationRecord
 end

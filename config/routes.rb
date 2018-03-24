@@ -17,7 +17,8 @@
 # @author: Kaustav Chakraborty (@phoenixTW)
 
 Rails.application.routes.draw do
-  post 'contacts/add_contacts'
+    post 'contacts/add_contacts'
 
-  resources :members
+    resources :members
+    resources :groups
 end

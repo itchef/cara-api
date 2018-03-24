@@ -16,8 +16,24 @@
 
 # @author: Kaustav Chakraborty (@phoenixTW)
 
-class AddProfilePhotoForMembers < ActiveRecord::Migration[5.1]
-    def change
-        add_column :members, :photo_url, :string
+class GroupsController < ApplicationController
+    def index
+        render json: Group.all.map {|group| Oprah.present(group).json }
     end
+
+    def create
+        group = Group.new(group_params)
+        if group.valid?
+            group.save
+            render json: Oprah.present(group).json
+        else
+            render json: {message: 'Request Error. Group name / description can not be blank', detailed_message: group.errors.messages}, :status => :bad_request
+        end
+    end
+    
+    private
+    def group_params
+        params.require(:group).permit(:name, :description)
+    end
+
 end

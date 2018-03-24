@@ -16,8 +16,13 @@
 
 # @author: Kaustav Chakraborty (@phoenixTW)
 
-class AddProfilePhotoForMembers < ActiveRecord::Migration[5.1]
+class CreateGroups < ActiveRecord::Migration[5.1]
     def change
-        add_column :members, :photo_url, :string
+        create_table :groups do |t|
+            t.string :name
+            t.text :description
+
+            t.timestamps
+        end
     end
 end

@@ -16,8 +16,12 @@
 
 # @author: Kaustav Chakraborty (@phoenixTW)
 
-class AddProfilePhotoForMembers < ActiveRecord::Migration[5.1]
-    def change
-        add_column :members, :photo_url, :string
+class GroupPresenter < Oprah::Presenter
+    def json
+        {
+            id: id,
+            name: name,
+            description: description
+        }
     end
 end

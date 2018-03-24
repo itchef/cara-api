@@ -18,7 +18,7 @@
 
 class ContactsController < ApplicationController
     def add_contacts
-        contacts = get_contacts
+        contacts = contacts_params
         contacts.each do | contact |
             contact_source = ContactSource.find_by(:name => contact[:name])
             member = Member.find(get_member_id_from_params)
@@ -42,7 +42,7 @@ class ContactsController < ApplicationController
         params.permit(:member_id)[:member_id]
     end
 
-    def get_contacts
+    def contacts_params
         params.require(:contacts)
     end
 end

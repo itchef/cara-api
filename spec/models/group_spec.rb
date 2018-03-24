@@ -16,8 +16,8 @@
 
 # @author: Kaustav Chakraborty (@phoenixTW)
 
-class AddProfilePhotoForMembers < ActiveRecord::Migration[5.1]
-    def change
-        add_column :members, :photo_url, :string
-    end
+require 'rails_helper'
+
+RSpec.describe Group, type: :model do
+    pending "add some examples to (or delete) #{__FILE__}"
 end
