@@ -16,20 +16,17 @@
 
 # @author: Kaustav Chakraborty (@phoenixTW)
 
-class GroupPresenter < Oprah::Presenter
-    def json
-        {
-            id: id,
-            name: name,
-            description: description,
-            members: Group.get_assigned_members_list(id)
-        }
-    end
+class GroupMemberMap < ApplicationRecord
+    belongs_to :member
+    belongs_to :group
+    
+    validate :unique_entry
 
-    def group_assignment(group_member_map)
-        {
-            group: Oprah.present(Group.find(group_member_map.group_id)).json,
-            member: Oprah.present(Member.find(group_member_map.member_id)).basic
-        }
+    private
+    def unique_entry
+        record = GroupMemberMap.find_by(:member_id => member_id, :group_id => group_id)
+        if !record.nil?
+            errors.add(:member_id, "Member is already assign to this group")
+        end
     end
 end

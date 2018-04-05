@@ -34,4 +34,12 @@ class MemberPresenter < Oprah::Presenter
                        .as_json(:except => :id)
         }
     end
+
+    def basic
+        {
+            id: id,
+            name: name,
+            photo_url: photo_url
+        }
+    end
 end

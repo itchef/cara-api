@@ -16,20 +16,8 @@
 
 # @author: Kaustav Chakraborty (@phoenixTW)
 
-class GroupPresenter < Oprah::Presenter
-    def json
-        {
-            id: id,
-            name: name,
-            description: description,
-            members: Group.get_assigned_members_list(id)
-        }
-    end
+require 'rails_helper'
 
-    def group_assignment(group_member_map)
-        {
-            group: Oprah.present(Group.find(group_member_map.group_id)).json,
-            member: Oprah.present(Member.find(group_member_map.member_id)).basic
-        }
-    end
+RSpec.describe GroupMemberMap, type: :model do
+    pending "add some examples to (or delete) #{__FILE__}"
 end

@@ -16,20 +16,9 @@
 
 # @author: Kaustav Chakraborty (@phoenixTW)
 
-class GroupPresenter < Oprah::Presenter
-    def json
-        {
-            id: id,
-            name: name,
-            description: description,
-            members: Group.get_assigned_members_list(id)
-        }
-    end
-
-    def group_assignment(group_member_map)
-        {
-            group: Oprah.present(Group.find(group_member_map.group_id)).json,
-            member: Oprah.present(Member.find(group_member_map.member_id)).basic
-        }
+FactoryBot.define do
+    factory :group_member_map do
+        member nil
+        group nil
     end
 end

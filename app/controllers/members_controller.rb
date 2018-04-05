@@ -17,11 +17,15 @@
 # @author: Kaustav Chakraborty (@phoenixTW)
 
 class MembersController < ApplicationController
-    before_action :set_topic, only: [:show]
+    before_action :set_member, only: [:show]
 
     def index
         @members = Member.all.map {|member| Oprah.present(member).json }
         render json: @members
+    end
+
+    def names
+        render json: Member.all.select(:id, :name)
     end
 
     def show
@@ -39,7 +43,7 @@ class MembersController < ApplicationController
     end
 
     private
-    def set_topic
+    def set_member
         @member = Member.find(params[:id])
     end
 

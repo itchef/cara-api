@@ -17,4 +17,11 @@
 # @author: Kaustav Chakraborty (@phoenixTW)
 
 class Group < ApplicationRecord
+    def self.get_assigned_members_list(group_id)
+        Member.select(:id, :name, :photo_url)
+            .where(
+                :id => GroupMemberMap.select(:member_id)
+                           .where(:group_id => group_id)
+            )
+    end
 end

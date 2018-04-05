@@ -17,7 +17,10 @@
 # @author: Kaustav Chakraborty (@phoenixTW)
 
 Rails.application.routes.draw do
+    # Custom Routes
     post 'contacts/add_contacts'
+    get 'members/names'
+    post 'groups/assign_member'
 
     resources :members
     resources :groups

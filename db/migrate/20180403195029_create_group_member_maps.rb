@@ -16,20 +16,13 @@
 
 # @author: Kaustav Chakraborty (@phoenixTW)
 
-class GroupPresenter < Oprah::Presenter
-    def json
-        {
-            id: id,
-            name: name,
-            description: description,
-            members: Group.get_assigned_members_list(id)
-        }
-    end
+class CreateGroupMemberMaps < ActiveRecord::Migration[5.1]
+    def change
+        create_table :group_member_maps do |t|
+            t.references :member, foreign_key: true
+            t.references :group, foreign_key: true
 
-    def group_assignment(group_member_map)
-        {
-            group: Oprah.present(Group.find(group_member_map.group_id)).json,
-            member: Oprah.present(Member.find(group_member_map.member_id)).basic
-        }
+            t.timestamps
+        end
     end
 end

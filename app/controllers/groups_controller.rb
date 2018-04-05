@@ -30,10 +30,24 @@ class GroupsController < ApplicationController
             render json: {message: 'Request Error. Group name / description can not be blank', detailed_message: group.errors.messages}, :status => :bad_request
         end
     end
+
+    def assign_member
+        group_member_map = GroupMemberMap.new(group_member_map_params)
+        if group_member_map.valid?
+            group_member_map.save
+            render json: Oprah.present(Group.find(group_member_map.group_id)).group_assignment(group_member_map)
+        else
+            render json: {message: 'Member is already assigned to group', detailed_message: group_member_map.errors.messages}, :status => :bad_request
+        end
+    end
     
     private
     def group_params
         params.require(:group).permit(:name, :description)
+    end
+
+    def group_member_map_params
+        params.permit(:group_id, :member_id)
     end
 
 end
