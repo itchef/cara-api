@@ -17,7 +17,7 @@
 # @author: Kaustav Chakraborty (@phoenixTW)
 
 class MembersController < ApplicationController
-    before_action :set_member, only: [:show]
+    before_action :set_member, only: [:show, :update]
 
     def index
         @members = Member.all.map {|member| Oprah.present(member).json }
@@ -39,6 +39,17 @@ class MembersController < ApplicationController
             render json: member
         else
             render json: {message: 'Request Error. Member name / age / place can not be null.', detailed_message: member.errors.messages }, :status => :bad_request
+        end
+    end
+
+    def update
+        if @member.update_attributes(member_params)
+            @member.update(member_params)
+            render json: @member
+        else
+            render json: {message: 'Member information is not updated.', detailed_message: member.errors.messages },
+                   :status =>
+                :bad_request
         end
     end
 
