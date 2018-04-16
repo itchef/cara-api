@@ -17,7 +17,7 @@
 # @author: Kaustav Chakraborty (@phoenixTW)
 
 class MembersController < ApplicationController
-    before_action :set_member, only: [:show, :update]
+    before_action :set_member, only: [:show, :update, :destroy]
 
     def index
         @members = Member.all.map {|member| Oprah.present(member).json }
@@ -47,9 +47,19 @@ class MembersController < ApplicationController
             @member.update(member_params)
             render json: @member
         else
-            render json: {message: 'Member information is not updated.', detailed_message: member.errors.messages },
+            render json: {message: 'Member information is not updated.', detailed_message: @member.errors.messages },
                    :status =>
                 :bad_request
+        end
+    end
+
+    def destroy
+        if @member.destroy
+            render json: @member, status: :ok
+        else
+            render json: {message: 'Member is unable to get deleted.', detailed_message: @member.errors.messages },
+                   :status =>
+                       :bad_request
         end
     end
 

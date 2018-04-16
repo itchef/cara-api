@@ -21,5 +21,6 @@ class Member < ApplicationRecord
     validates :age, presence: true
     validates :place, presence: true
 
-    has_many :contact_source_member_maps
+    has_many :contact_source_member_maps, :dependent => :destroy
+    has_many :group_member_maps, :dependent => :destroy
 end
