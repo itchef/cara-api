@@ -40,6 +40,15 @@ class GroupsController < ApplicationController
             render json: {message: 'Member is already assigned to group', detailed_message: group_member_map.errors.messages}, :status => :bad_request
         end
     end
+
+    def unassigned_member
+        group_member_map = GroupMemberMap.find_by(group_member_map_params);
+        if group_member_map.delete
+            render json: Oprah.present(Member.find(group_member_map[:member_id])).basic
+        else
+            render json: {message: 'Member is unabled to unassigned', detailed_message: group_member_map.errors.message}, :status => :bad_request
+        end
+    end
     
     private
     def group_params
