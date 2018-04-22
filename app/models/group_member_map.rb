@@ -22,6 +22,12 @@ class GroupMemberMap < ApplicationRecord
     
     validate :unique_entry
 
+    def self.get_all_assigned_members
+        Member.all.where(
+                      :id => self.select(:member_id).distinct
+        )
+    end
+
     private
     def unique_entry
         record = GroupMemberMap.find_by(:member_id => member_id, :group_id => group_id)

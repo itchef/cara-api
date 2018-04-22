@@ -16,19 +16,18 @@
 
 # @author: Kaustav Chakraborty (@phoenixTW)
 
-class Group < ApplicationRecord
-    def self.get_assigned_members_list(group_id)
-        Member.select(:id, :name, :photo_url)
-            .where(
-                :id => GroupMemberMap.select(:member_id)
-                           .where(:group_id => group_id)
-            )
-    end
-
-    def self.get_assigned_members_list_with_full_data(group_id)
-        Member.all.where(
-                      :id => GroupMemberMap.select(:member_id)
-                                 .where(:group_id => group_id)
-        )
+class DashboardController < ApplicationController
+    def index
+        unassigned_members = (Member.all - GroupMemberMap.get_all_assigned_members)
+                                     .map { |member| Oprah.present(member).json }
+        unassigned_group = {
+            name: 'Unassigned',
+            description: 'Yet to get assigned',
+            members_count: unassigned_members.size,
+            members: unassigned_members
+        }
+        render json: Group.all
+                         .map { |group| Oprah.present(group).full_data }
+                         .unshift(unassigned_group)
     end
 end

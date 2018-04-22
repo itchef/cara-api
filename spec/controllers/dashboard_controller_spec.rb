@@ -16,19 +16,8 @@
 
 # @author: Kaustav Chakraborty (@phoenixTW)
 
-class Group < ApplicationRecord
-    def self.get_assigned_members_list(group_id)
-        Member.select(:id, :name, :photo_url)
-            .where(
-                :id => GroupMemberMap.select(:member_id)
-                           .where(:group_id => group_id)
-            )
-    end
+require 'rails_helper'
 
-    def self.get_assigned_members_list_with_full_data(group_id)
-        Member.all.where(
-                      :id => GroupMemberMap.select(:member_id)
-                                 .where(:group_id => group_id)
-        )
-    end
+RSpec.describe DashboardController, type: :controller do
+
 end

@@ -32,4 +32,14 @@ class GroupPresenter < Oprah::Presenter
             member: Oprah.present(Member.find(group_member_map.member_id)).basic
         }
     end
+
+    def full_data
+        {
+            name: name,
+            description: description,
+            members_count: GroupMemberMap.where(:group_id => id).count,
+            members: Group.get_assigned_members_list_with_full_data(id)
+                         .map { |member| Oprah.present(member).json }
+        }
+    end
 end
