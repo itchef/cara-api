@@ -16,16 +16,8 @@
 
 # @author: Kaustav Chakraborty (@phoenixTW)
 
-Rails.application.routes.draw do
-    # Custom Routes
-    post 'contacts/add_contacts'
-    get 'members/names'
+require 'rails_helper'
 
-    post 'groups/assign_member'
-    delete 'groups/:group_id/unassigned_member/:member_id' => "groups#unassigned_member"
-
-    resources :members
-    resources :groups
-    resources :dashboard, only: [:index]
-    resources :users, only: [:index, :create]
+RSpec.describe User, type: :model do
+  pending "add some examples to (or delete) #{__FILE__}"
 end

@@ -16,16 +16,18 @@
 
 # @author: Kaustav Chakraborty (@phoenixTW)
 
-Rails.application.routes.draw do
-    # Custom Routes
-    post 'contacts/add_contacts'
-    get 'members/names'
+require 'rails_helper'
 
-    post 'groups/assign_member'
-    delete 'groups/:group_id/unassigned_member/:member_id' => "groups#unassigned_member"
-
-    resources :members
-    resources :groups
-    resources :dashboard, only: [:index]
-    resources :users, only: [:index, :create]
+# Specs in this file have access to a helper object that includes
+# the SessionHelper. For example:
+#
+# describe SessionHelper do
+#   describe "string concat" do
+#     it "concats two strings with spaces" do
+#       expect(helper.concat_strings("this","that")).to eq("this that")
+#     end
+#   end
+# end
+RSpec.describe SessionHelper, type: :helper do
+  pending "add some examples to (or delete) #{__FILE__}"
 end

@@ -17,6 +17,9 @@ gem 'rack-cors', '1.0.2'
 # Presenter
 gem 'oprah', '0.3.0'
 
+# Auth
+gem 'rails_api_auth', '0.1.0'
+
 group :development, :test do
     gem 'pry', '0.11.3'
     gem 'rspec-rails', '3.7.2'

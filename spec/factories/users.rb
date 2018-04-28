@@ -16,16 +16,8 @@
 
 # @author: Kaustav Chakraborty (@phoenixTW)
 
-Rails.application.routes.draw do
-    # Custom Routes
-    post 'contacts/add_contacts'
-    get 'members/names'
+FactoryBot.define do
+  factory :user do
 
-    post 'groups/assign_member'
-    delete 'groups/:group_id/unassigned_member/:member_id' => "groups#unassigned_member"
-
-    resources :members
-    resources :groups
-    resources :dashboard, only: [:index]
-    resources :users, only: [:index, :create]
+  end
 end
