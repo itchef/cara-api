@@ -22,4 +22,10 @@ module UserHelper
             params[:identification].empty? || params[:password].empty? || params[:password_confirmation].empty?
         true
     end
+
+    def is_password_params_present?(params)
+        return false if
+            params[:password].empty? || params[:password_confirmation].empty?
+        true
+    end
 end

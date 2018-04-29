@@ -24,8 +24,11 @@ Rails.application.routes.draw do
     post 'groups/assign_member'
     delete 'groups/:group_id/unassigned_member/:member_id' => "groups#unassigned_member"
 
+    get 'users' => "users#index"
+    post 'users' => "users#create"
+    put 'users/:id/update_password' => "users#update_password"
+
     resources :members
     resources :groups
     resources :dashboard, only: [:index]
-    resources :users, only: [:index, :create]
 end

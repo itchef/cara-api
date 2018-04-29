@@ -17,6 +17,7 @@
 # @author: Kaustav Chakraborty (@phoenixTW)
 
 class UsersController < ApplicationController
+    before_action :set_user, only: [:update_password]
     include UserHelper
 
     def index
@@ -35,14 +36,31 @@ class UsersController < ApplicationController
         end
     end
 
+    def update_password
+        if @user && is_password_params_present?(password_params)
+            @user.login.update_attribute(:password, password_params[:password])
+            render json: { message: "Password is successfully updated", user: Oprah.present(@user).json }
+        else
+            render json: { message: "Password is missing" }, :status => :unprocessable_entity
+        end
+    end
+
     private
     def user_params
         params.permit(:first_name, :last_name)
+    end
+
+    def password_params
+        params.permit(:password, :password_confirmation)
     end
 
     def login_params
         sign_up_params = params.permit(:password, :password_confirmation)
         sign_up_params[:identification] = params[:username]
         sign_up_params
+    end
+
+    def set_user
+        @user = User.find(params[:id])
     end
 end
