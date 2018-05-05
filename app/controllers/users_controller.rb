@@ -37,9 +37,9 @@ class UsersController < ApplicationController
     end
 
     def update_password
-        if @user && is_password_params_present?(password_params)
+        if @user && is_password_params_present?(password_params) && passwords_matched?(password_params)
             @user.login.update_attribute(:password, password_params[:password])
-            render json: { message: "Password is successfully updated", user: Oprah.present(@user).json }
+            render json: Oprah.present(@user).json
         else
             render json: { message: "Password is missing" }, :status => :unprocessable_entity
         end

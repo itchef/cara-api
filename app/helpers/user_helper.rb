@@ -28,4 +28,10 @@ module UserHelper
             params[:password].empty? || params[:password_confirmation].empty?
         true
     end
+
+    def passwords_matched?(params)
+        return true if
+            params[:password] === params[:password_confirmation]
+        false
+    end
 end
