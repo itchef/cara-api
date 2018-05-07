@@ -27,6 +27,7 @@ Rails.application.routes.draw do
     get 'users' => "users#index"
     post 'users' => "users#create"
     put 'users/:id/update_password' => "users#update_password"
+    delete 'users/:id/unsubscribe' => "users#unsubscribe"
 
     resources :members
     resources :groups

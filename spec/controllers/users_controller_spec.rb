@@ -78,8 +78,7 @@ RSpec.describe UsersController, type: :controller do
             put :update_password, :params => update_password_params
             expect(response.content_type).to eq "application/json"
             response_data = JSON.parse(response.body, {:symbolize_names => true})
-            expect(response_data[:message]).to eq "Password is successfully updated"
-            expect(response_data[:user][:username]).to eq @user[:username]
+            expect(response_data[:username]).to eq @user[:username]
         end
 
         it 'should not update user password for invalid arguments' do
@@ -92,6 +91,35 @@ RSpec.describe UsersController, type: :controller do
             expect(response.content_type).to eq "application/json"
             error = JSON.parse(response.body, {:symbolize_names => true})
             expect(error[:message]).to eq 'Password is missing'
+        end
+    end
+    describe "DELETE #unsubscribe" do
+        @user = nil
+        before(:each) do
+            user = {
+                username: 'caraUser',
+                password: 'password',
+                password_confirmation: 'password',
+                first_name: 'John',
+                last_name: 'Smith'
+            }
+            post :create, :params => user
+            @user = JSON.parse(response.body, {:symbolize_names => true})
+            post :unsubscribe, :params => @user
+        end
+        after(:each) do
+            User.delete_all
+        end
+
+        it 'should unsubscribe a valid user' do
+            expect(response.status).to eq 200
+        end
+
+        it 'should show unsucess message during unsubscribe for an unsubscribed user' do
+            post :unsubscribe, :params => @user
+            expect(response.status).to eq 400
+            error = JSON.parse(response.body, {:symbolize_names => true})
+            expect(error[:message]).to eq "caraUser is already unsubscribed"
         end
     end
 end

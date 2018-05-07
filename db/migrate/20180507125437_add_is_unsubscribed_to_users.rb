@@ -16,14 +16,11 @@
 
 # @author: Kaustav Chakraborty (@phoenixTW)
 
-class UserPresenter < Oprah::Presenter
-    def json
-        {
-            id: id,
-            first_name: first_name,
-            last_name: last_name,
-            username: login[:identification],
-            unsubscribed: is_unsubscribed
-        }
+class AddIsUnsubscribedToUsers < ActiveRecord::Migration[5.2]
+    def change
+        add_column :users, :is_unsubscribed, :boolean, :null => false, :default => false
+        reversible do |direction|
+            direction.up { User.update_all(:is_unsubscribed => false) }
+        end
     end
 end
