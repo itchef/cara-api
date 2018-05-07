@@ -93,7 +93,7 @@ RSpec.describe UsersController, type: :controller do
             expect(error[:message]).to eq 'Password is missing'
         end
     end
-    describe "DELETE #unsubscribe" do
+    describe "GET #unsubscribe" do
         @user = nil
         before(:each) do
             user = {
@@ -105,7 +105,7 @@ RSpec.describe UsersController, type: :controller do
             }
             post :create, :params => user
             @user = JSON.parse(response.body, {:symbolize_names => true})
-            post :unsubscribe, :params => @user
+            get :unsubscribe, :params => @user
         end
         after(:each) do
             User.delete_all
@@ -120,6 +120,37 @@ RSpec.describe UsersController, type: :controller do
             expect(response.status).to eq 400
             error = JSON.parse(response.body, {:symbolize_names => true})
             expect(error[:message]).to eq "caraUser is already unsubscribed"
+        end
+    end
+
+    describe "GET #subscribe" do
+        @user = nil
+        before(:each) do
+            user = {
+                username: 'caraUser',
+                password: 'password',
+                password_confirmation: 'password',
+                first_name: 'John',
+                last_name: 'Smith'
+            }
+            post :create, :params => user
+            @user = JSON.parse(response.body, {:symbolize_names => true})
+        end
+        after(:each) do
+            User.delete_all
+        end
+
+        it 'should subscribe a valid user' do
+            get :unsubscribe, :params => @user
+            get :subscribe, :params => @user
+            expect(response.status).to eq 200
+        end
+
+        it 'should show unsucess message during subscribe for an subscribed user' do
+            get :subscribe, :params => @user
+            expect(response.status).to eq 400
+            error = JSON.parse(response.body, {:symbolize_names => true})
+            expect(error[:message]).to eq "caraUser is already subscribed"
         end
     end
 end

@@ -17,7 +17,7 @@
 # @author: Kaustav Chakraborty (@phoenixTW)
 
 class UsersController < ApplicationController
-    before_action :set_user, only: [:update_password, :unsubscribe]
+    before_action :set_user, only: [:update_password, :unsubscribe, :subscribe]
     include UserHelper
 
     def index
@@ -42,6 +42,15 @@ class UsersController < ApplicationController
             render json: Oprah.present(@user).json
         else
             render json: { message: "Password is missing" }, :status => :unprocessable_entity
+        end
+    end
+
+    def subscribe
+        if @user[:is_unsubscribed]
+            @user.update_attribute(:is_unsubscribed, false)
+            render json: Oprah.present(@user).json
+        else
+            render json: { message: "#{@user.login.identification} is already subscribed" }, :status => :bad_request
         end
     end
 
