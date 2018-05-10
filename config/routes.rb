@@ -18,6 +18,8 @@
 
 Rails.application.routes.draw do
     # Custom Routes
+    post '/token' => "session#create", defaults: { format: :json }
+
     post 'contacts/add_contacts', defaults: { format: :json }
     get 'members/names', defaults: { format: :json }
 

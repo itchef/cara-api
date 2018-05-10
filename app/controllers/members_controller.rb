@@ -17,6 +17,8 @@
 # @author: Kaustav Chakraborty (@phoenixTW)
 
 class MembersController < ApplicationController
+    include RailsApiAuth::Authentication
+    before_action :authenticate!
     before_action :set_member, only: [:show, :update, :destroy]
 
     def index

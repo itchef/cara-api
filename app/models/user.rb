@@ -17,5 +17,10 @@
 # @author: Kaustav Chakraborty (@phoenixTW)
 
 class User < ApplicationRecord
-    has_one :login
+    has_one :login, :dependent => :destroy
+
+    def self.find_by_username(username)
+        login = Login.find_by_identification(username)
+        find(login.user_id) if login.present?
+    end
 end

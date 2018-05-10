@@ -19,138 +19,120 @@
 require 'rails_helper'
 
 RSpec.describe UsersController, type: :controller do
-    describe "POST create" do
-        user = {}
-        before(:each) do
-            user = {
-                username: 'caraUser',
-                password: 'password',
-                password_confirmation: 'password',
-                first_name: 'John',
-                last_name: 'Smith'
-            }
-        end
-        after(:each) do
-            User.delete_all
-        end
-        it 'should successfully add a user' do
-            post :create, :params => user
-            user = JSON.parse(response.body, {:symbolize_names => true})
-            expect(response.content_type).to eq "application/json"
-            expect(User.all.size).to eq 1
-            expect(user[:first_name]).to eq 'John'
-            expect(user[:last_name]).to eq 'Smith'
-            expect(user[:username]).to eq 'caraUser'
-        end
+  let(:subscibed_admin_user) {FactoryBot.create(:admin_subscribed_user)}
+  let(:secondary_user) {FactoryBot.create(:secondary_user)}
+  let(:secondary_unsubscribed_user) {FactoryBot.create(:secondary_unsubscribed_user)}
 
-        it 'should not add a user when mandatory fields are empty' do
-            user[:username] = ""
-            post :create, :params => user
-            expect(response).to have_http_status(:unprocessable_entity)
-            expect(response.content_type).to eq "application/json"
-            error = JSON.parse(response.body, {:symbolize_names => true})
-            expect(error[:message]).to eq 'Mandatory Fields are empty'
-        end
+  after(:all) do
+    User.delete_all
+  end
+
+  describe "POST create" do
+    user = {}
+    before(:each) do
+      user = {
+        username: 'caraUser',
+        password: 'password',
+        password_confirmation: 'password',
+        first_name: 'John',
+        last_name: 'Smith'
+      }
+      allow(controller).to receive(:authenticate!).and_return(true)
     end
-    describe "PUT #update_password" do
-        @user = nil
-        before(:each) do
-            user = {
-                username: 'caraUser',
-                password: 'password',
-                password_confirmation: 'password',
-                first_name: 'John',
-                last_name: 'Smith'
-            }
-            post :create, :params => user
-            @user = JSON.parse(response.body, {:symbolize_names => true})
-        end
-        after(:each) do
-            User.delete_all
-        end
-
-        it 'should update user password successfully for valid arguments' do
-            update_password_params = {
-                id: @user[:id],
-                password: 'hello',
-                password_confirmation: 'hello'
-            }
-            put :update_password, :params => update_password_params
-            expect(response.content_type).to eq "application/json"
-            response_data = JSON.parse(response.body, {:symbolize_names => true})
-            expect(response_data[:username]).to eq @user[:username]
-        end
-
-        it 'should not update user password for invalid arguments' do
-            update_password_params = {
-                id: @user[:id],
-                password: '',
-                password_confirmation: ''
-            }
-            put :update_password, :params => update_password_params
-            expect(response.content_type).to eq "application/json"
-            error = JSON.parse(response.body, {:symbolize_names => true})
-            expect(error[:message]).to eq 'Password is missing'
-        end
+    after(:each) do
+      User.delete_all
     end
-    describe "GET #unsubscribe" do
-        @user = nil
-        before(:each) do
-            user = {
-                username: 'caraUser',
-                password: 'password',
-                password_confirmation: 'password',
-                first_name: 'John',
-                last_name: 'Smith'
-            }
-            post :create, :params => user
-            @user = JSON.parse(response.body, {:symbolize_names => true})
-            get :unsubscribe, :params => @user
-        end
-        after(:each) do
-            User.delete_all
-        end
-
-        it 'should unsubscribe a valid user' do
-            expect(response.status).to eq 200
-        end
-
-        it 'should show unsucess message during unsubscribe for an unsubscribed user' do
-            post :unsubscribe, :params => @user
-            expect(response.status).to eq 400
-            error = JSON.parse(response.body, {:symbolize_names => true})
-            expect(error[:message]).to eq "caraUser is already unsubscribed"
-        end
+    it 'should successfully add a user' do
+      post :create, :params => user
+      user = JSON.parse(response.body, {:symbolize_names => true})
+      expect(response.content_type).to eq "application/json"
+      expect(User.all.size).to eq 1
+      expect(user[:first_name]).to eq 'John'
+      expect(user[:last_name]).to eq 'Smith'
+      expect(user[:username]).to eq 'caraUser'
     end
 
-    describe "GET #subscribe" do
-        @user = nil
-        before(:each) do
-            user = {
-                username: 'caraUser',
-                password: 'password',
-                password_confirmation: 'password',
-                first_name: 'John',
-                last_name: 'Smith'
-            }
-            post :create, :params => user
-            @user = JSON.parse(response.body, {:symbolize_names => true})
-        end
-        after(:each) do
-            User.delete_all
-        end
-
-        it 'should subscribe a valid user' do
-            get :unsubscribe, :params => @user
-            get :subscribe, :params => @user
-            expect(response.status).to eq 200
-        end
-
-        it 'should show unsucess message during subscribe for an subscribed user' do
-            get :subscribe, :params => @user
-            expect(response.status).to eq 400
-            error = JSON.parse(response.body, {:symbolize_names => true})
-            expect(error[:message]).to eq "caraUser is already subscribed"
-        end
+    it 'should not add a user when mandatory fields are empty' do
+      user[:username] = ""
+      post :create, :params => user
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.content_type).to eq "application/json"
+      error = JSON.parse(response.body, {:symbolize_names => true})
+      expect(error[:message]).to eq 'Mandatory Fields are empty'
     end
+  end
+  describe "PUT #update_password" do
+    @user = nil
+    before(:each) do
+      allow(controller).to receive(:authenticate!).and_return(true)
+    end
+    after(:each) do
+      User.delete_all
+    end
+
+    it 'should update user password successfully for valid arguments' do
+      update_password_params = {
+        id: subscibed_admin_user[:id],
+        password: 'hello',
+        password_confirmation: 'hello'
+      }
+      put :update_password, :params => update_password_params
+      expect(response.content_type).to eq "application/json"
+      response_data = JSON.parse(response.body, {:symbolize_names => true})
+      expect(response_data[:username]).to eq subscibed_admin_user.login.identification
+    end
+
+    it 'should not update user password for invalid arguments' do
+      update_password_params = {
+        id: secondary_user[:id],
+        password: '',
+        password_confirmation: ''
+      }
+      put :update_password, :params => update_password_params
+      expect(response.content_type).to eq "application/json"
+      error = JSON.parse(response.body, {:symbolize_names => true})
+      expect(error[:message]).to eq 'Password is missing'
+    end
+  end
+  describe "GET #unsubscribe" do
+    before(:each) do
+      allow(controller).to receive(:authenticate!).and_return(true)
+      get :unsubscribe, :params => {:id => secondary_user[:id]}
+    end
+    after(:each) do
+      User.delete_all
+    end
+
+    it 'should unsubscribe a valid user' do
+      expect(response.status).to eq 200
+    end
+
+    it 'should show unsucess message during unsubscribe for an unsubscribed user' do
+      post :unsubscribe, :params => {:id => secondary_user.id}
+      expect(response.status).to eq 400
+      error = JSON.parse(response.body, {:symbolize_names => true})
+      expect(error[:message]).to eq "#{secondary_user.login[:identification]} is already unsubscribed"
+    end
+  end
+
+  describe "GET #subscribe" do
+    before(:each) do
+      allow(controller).to receive(:authenticate!).and_return(true)
+    end
+    after(:each) do
+      User.delete_all
+    end
+
+    it 'should subscribe a valid user' do
+      get :subscribe, :params => {:id => secondary_unsubscribed_user.id}
+      expect(response.status).to eq 200
+    end
+
+    it 'should show unsucess message during subscribe for an subscribed user' do
+      get :subscribe, :params => {:id => secondary_user.id}
+      expect(response.status).to eq 400
+      error = JSON.parse(response.body, {:symbolize_names => true})
+      expect(error[:message]).to eq "#{secondary_user.login[:identification]} is already subscribed"
+    end
+  end
 end

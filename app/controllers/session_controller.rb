@@ -16,5 +16,13 @@
 
 # @author: Kaustav Chakraborty (@phoenixTW)
 
-class SessionController < ApplicationController
+class SessionController < RailsApiAuth::Oauth2Controller
+    def create
+        user = User.find_by_username(params[:username])
+        if user && user[:is_unsubscribed]
+            render json: { error: "unauthorised", message: "#{params[:username]} doesn't have access" }, :status => 422
+        else
+            super
+        end
+    end
 end

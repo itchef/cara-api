@@ -1,0 +1,6 @@
+ContactSource.create(:name => "email")
+ContactSource.create(:name => "phone")
+ContactSource.create(:name => "facebook")
+ContactSource.create(:name => "linkedin")
+ContactSource.create(:name => "twitter")
+ContactSource.create(:name => "github")

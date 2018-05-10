@@ -17,68 +17,71 @@
 # @author: Kaustav Chakraborty (@phoenixTW)
 
 class UsersController < ApplicationController
-    before_action :set_user, only: [:update_password, :unsubscribe, :subscribe]
-    include UserHelper
+  include RailsApiAuth::Authentication
+  before_action :authenticate!
+  before_action :set_user, only: [:update_password, :unsubscribe, :subscribe]
+  include UserHelper
 
-    def index
-        render json: User.all.map { |user| Oprah.present(user).json }
-    end
+  def index
+    render json: User.all.map {|user| Oprah.present(user).json}
+  end
 
-    def create
-        user = User.new(user_params)
-        if user.valid? && is_sign_up_params_present?(login_params)
-            user.save && user.create_login(login_params)
-            render json: Oprah.present(user).json
-        else
-            render json:
-                       { message: 'Mandatory Fields are empty' },
-                   :status => :unprocessable_entity
-        end
+  def create
+    user = User.new(user_params)
+    if user.valid? && is_sign_up_params_present?(login_params)
+      user.save && user.create_login(login_params)
+      render json: Oprah.present(user).json
+    else
+      render json:
+               {message: 'Mandatory Fields are empty'},
+             :status => :unprocessable_entity
     end
+  end
 
-    def update_password
-        if @user && is_password_params_present?(password_params) && passwords_matched?(password_params)
-            @user.login.update_attribute(:password, password_params[:password])
-            render json: Oprah.present(@user).json
-        else
-            render json: { message: "Password is missing" }, :status => :unprocessable_entity
-        end
+  def update_password
+    if @user && is_password_params_present?(password_params) && passwords_matched?(password_params)
+      @user.login.update_attribute(:password, password_params[:password])
+      render json: Oprah.present(@user).json
+    else
+      render json: {message: "Password is missing"}, :status => :unprocessable_entity
     end
+  end
 
-    def subscribe
-        if @user[:is_unsubscribed]
-            @user.update_attribute(:is_unsubscribed, false)
-            render json: Oprah.present(@user).json
-        else
-            render json: { message: "#{@user.login.identification} is already subscribed" }, :status => :bad_request
-        end
+  def subscribe
+    if @user[:is_unsubscribed]
+      @user.update_attribute(:is_unsubscribed, false)
+      render json: Oprah.present(@user).json
+    else
+      render json: {message: "#{@user.login.identification} is already subscribed"}, :status => :bad_request
     end
+  end
 
-    def unsubscribe
-        unless @user[:is_unsubscribed]
-            @user.update_attribute(:is_unsubscribed, true)
-            render json: Oprah.present(@user).json
-        else
-            render json: { message: "#{@user.login.identification} is already unsubscribed" }, :status => :bad_request
-        end
+  def unsubscribe
+    unless @user[:is_unsubscribed]
+      @user.update_attribute(:is_unsubscribed, true)
+      render json: Oprah.present(@user).json
+    else
+      render json: {message: "#{@user.login.identification} is already unsubscribed"}, :status => :bad_request
     end
+  end
 
-    private
-    def user_params
-        params.permit(:first_name, :last_name)
-    end
+  private
 
-    def password_params
-        params.permit(:password, :password_confirmation)
-    end
+  def user_params
+    params.permit(:first_name, :last_name)
+  end
 
-    def login_params
-        sign_up_params = params.permit(:password, :password_confirmation)
-        sign_up_params[:identification] = params[:username]
-        sign_up_params
-    end
+  def password_params
+    params.permit(:password, :password_confirmation)
+  end
 
-    def set_user
-        @user = User.find(params[:id])
-    end
+  def login_params
+    sign_up_params = params.permit(:password, :password_confirmation)
+    sign_up_params[:identification] = params[:username]
+    sign_up_params
+  end
+
+  def set_user
+    @user = User.find(params[:id])
+  end
 end

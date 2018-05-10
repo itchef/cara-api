@@ -17,6 +17,9 @@
 # @author: Kaustav Chakraborty (@phoenixTW)
 
 class DashboardController < ApplicationController
+    include RailsApiAuth::Authentication
+    before_action :authenticate!
+
     def index
         unassigned_members = (Member.all - GroupMemberMap.get_all_assigned_members)
                                      .map { |member| Oprah.present(member).json }

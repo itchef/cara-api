@@ -17,6 +17,9 @@
 # @author: Kaustav Chakraborty (@phoenixTW)
 
 class GroupsController < ApplicationController
+    include RailsApiAuth::Authentication
+    before_action :authenticate!
+
     def index
         render json: Group.all.map {|group| Oprah.present(group).json }
     end

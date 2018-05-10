@@ -17,24 +17,21 @@
 # @author: Kaustav Chakraborty (@phoenixTW)
 
 FactoryBot.define do
-  factory :admin_subscribed_user, class: User do
-    first_name         Faker::Name.first_name
-    last_name          Faker::Name.last_name
-    is_unsubscribed    false
-    association :login, factory: :subscribed_login
+  factory :subscribed_login, class: Login do
+    identification  Faker::Internet.user_name
+    password_digest Faker::Internet.password(10, 20)
+    oauth2_token    Faker::Internet.password(32)
   end
 
-  factory :secondary_user, class: User do
-    first_name         Faker::Name.first_name
-    last_name          Faker::Name.last_name
-    is_unsubscribed    false
-    association :login, factory: :secondary_user_login
+  factory :secondary_user_login, class: Login do
+    identification  Faker::Internet.user_name
+    password_digest Faker::Internet.password(10, 20)
+    oauth2_token    Faker::Internet.password(32)
   end
 
-  factory :secondary_unsubscribed_user, class: User do
-    first_name         Faker::Name.first_name
-    last_name          Faker::Name.last_name
-    is_unsubscribed    true
-    association :login, factory: :secondary_unsubscribed_user_login
+  factory :secondary_unsubscribed_user_login, class: Login do
+    identification  Faker::Internet.user_name
+    password_digest Faker::Internet.password(10, 20)
+    oauth2_token    Faker::Internet.password(32)
   end
 end

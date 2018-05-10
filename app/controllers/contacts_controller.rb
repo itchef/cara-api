@@ -17,6 +17,9 @@
 # @author: Kaustav Chakraborty (@phoenixTW)
 
 class ContactsController < ApplicationController
+    include RailsApiAuth::Authentication
+    before_action :authenticate!
+
     def add_contacts
         contacts = contacts_params
         contacts.each do | contact |
