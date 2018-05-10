@@ -18,19 +18,19 @@
 
 Rails.application.routes.draw do
     # Custom Routes
-    post 'contacts/add_contacts'
-    get 'members/names'
+    post 'contacts/add_contacts', defaults: { format: :json }
+    get 'members/names', defaults: { format: :json }
 
-    post 'groups/assign_member'
-    delete 'groups/:group_id/unassigned_member/:member_id' => "groups#unassigned_member"
+    post 'groups/assign_member', defaults: { format: :json }
+    delete 'groups/:group_id/unassigned_member/:member_id' => "groups#unassigned_member", defaults: { format: :json }
 
-    get 'users' => "users#index"
-    post 'users' => "users#create"
-    put 'users/:id/update_password' => "users#update_password"
-    get 'users/:id/unsubscribe' => "users#unsubscribe"
-    get 'users/:id/subscribe' => "users#subscribe"
+    get 'users' => "users#index", defaults: { format: :json }
+    post 'users' => "users#create", defaults: { format: :json }
+    put 'users/:id/update_password' => "users#update_password", defaults: { format: :json }
+    get 'users/:id/unsubscribe' => "users#unsubscribe", defaults: { format: :json }
+    get 'users/:id/subscribe' => "users#subscribe", defaults: { format: :json }
 
-    resources :members
-    resources :groups
-    resources :dashboard, only: [:index]
+    resources :members, defaults: { format: :json }
+    resources :groups, defaults: { format: :json }
+    resources :dashboard, only: [:index], defaults: { format: :json }
 end
