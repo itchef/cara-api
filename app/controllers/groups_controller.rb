@@ -17,49 +17,49 @@
 # @author: Kaustav Chakraborty (@phoenixTW)
 
 class GroupsController < ApplicationController
-    include RailsApiAuth::Authentication
-    before_action :authenticate!
+  include RailsApiAuth::Authentication
+  before_action :authenticate!
 
-    def index
-        render json: Group.all.map {|group| Oprah.present(group).json }
-    end
+  def index
+    render json: Group.all.map {|group| Oprah.present(group).json }
+  end
 
-    def create
-        group = Group.new(group_params)
-        if group.valid?
-            group.save
-            render json: Oprah.present(group).json
-        else
-            render json: {message: 'Request Error. Group name / description can not be blank', detailed_message: group.errors.messages}, :status => :bad_request
-        end
+  def create
+    group = Group.new(group_params)
+    if group.valid?
+      group.save
+      render json: Oprah.present(group).json
+    else
+      render json: {message: 'Request Error. Group name / description can not be blank', detailed_message: group.errors.messages}, :status => :bad_request
     end
+  end
 
-    def assign_member
-        group_member_map = GroupMemberMap.new(group_member_map_params)
-        if group_member_map.valid?
-            group_member_map.save
-            render json: Oprah.present(Group.find(group_member_map.group_id)).group_assignment(group_member_map)
-        else
-            render json: {message: 'Member is already assigned to group', detailed_message: group_member_map.errors.messages}, :status => :bad_request
-        end
+  def assign_member
+    group_member_map = GroupMemberMap.new(group_member_map_params)
+    if group_member_map.valid?
+      group_member_map.save
+      render json: Oprah.present(Group.find(group_member_map.group_id)).group_assignment(group_member_map)
+    else
+      render json: {message: 'Member is already assigned to group', detailed_message: group_member_map.errors.messages}, :status => :bad_request
     end
+  end
 
-    def unassigned_member
-        group_member_map = GroupMemberMap.find_by(group_member_map_params);
-        if group_member_map.delete
-            render json: Oprah.present(Member.find(group_member_map[:member_id])).basic
-        else
-            render json: {message: 'Member is unabled to unassigned', detailed_message: group_member_map.errors.message}, :status => :bad_request
-        end
+  def unassigned_member
+    group_member_map = GroupMemberMap.find_by(group_member_map_params)
+    if not group_member_map.nil? and group_member_map.delete
+      render json: Oprah.present(Member.find(group_member_map[:member_id])).basic
+    else
+      render json: {message: 'Member is unable to unassigned'}, :status => :bad_request
     end
-    
-    private
-    def group_params
-        params.require(:group).permit(:name, :description)
-    end
+  end
 
-    def group_member_map_params
-        params.permit(:group_id, :member_id)
-    end
+  private
+  def group_params
+    params.require(:group).permit(:name, :description)
+  end
+
+  def group_member_map_params
+    params.permit(:group_id, :member_id)
+  end
 
 end
