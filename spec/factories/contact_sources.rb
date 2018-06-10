@@ -17,7 +17,7 @@
 # @author: Kaustav Chakraborty (@phoenixTW)
 
 FactoryBot.define do
-    factory :contact_source do
-        name "MyString"
+    factory :contact_source, class: ContactSource do
+        name "SomeName"
     end
 end

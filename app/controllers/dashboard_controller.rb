@@ -17,20 +17,20 @@
 # @author: Kaustav Chakraborty (@phoenixTW)
 
 class DashboardController < ApplicationController
-    include RailsApiAuth::Authentication
-    before_action :authenticate!
+  include RailsApiAuth::Authentication
+  before_action :authenticate!
 
-    def index
-        unassigned_members = (Member.all - GroupMemberMap.get_all_assigned_members)
-                                     .map { |member| Oprah.present(member).json }
-        unassigned_group = {
-            name: 'Unassigned',
-            description: 'Yet to get assigned',
-            members_count: unassigned_members.size,
-            members: unassigned_members
-        }
-        render json: Group.all
-                         .map { |group| Oprah.present(group).full_data }
-                         .unshift(unassigned_group)
-    end
+  def index
+    unassigned_members = (Member.all - GroupMemberMap.get_all_assigned_members)
+                           .map { |member| Oprah.present(member).json }
+    unassigned_group = {
+      name: 'Unassigned',
+      description: 'Yet to get assigned',
+      members_count: unassigned_members.size,
+      members: unassigned_members
+    }
+    render json: Group.all
+                   .map { |group| Oprah.present(group).full_data }
+                   .unshift(unassigned_group)
+  end
 end

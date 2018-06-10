@@ -20,15 +20,82 @@ require 'rails_helper'
 
 RSpec.describe ContactsController, type: :controller do
 
-  describe "GET #add" do
+  let(:subscibed_admin_user) {FactoryBot.create(:admin_subscribed_user)}
+  let(:member) {FactoryBot.create(:member)}
+  let(:email) {FactoryBot.create(:contact_source, :name => "email")}
+  let(:phone) {FactoryBot.create(:contact_source, :name => "phone")}
+
+  describe "POST #add_contacts" do
+    contacts_params = []
     before(:each) do
       allow(controller).to receive(:authenticate!).and_return(true)
+      contacts_params = [
+        { name: email[:name], value: Faker::Internet.email },
+        { name: phone[:name], value: Faker::Number.number(10) }
+      ]
+    end
+    after(:each) do
+      ContactSourceMemberMap.delete_all
+      ContactSource.delete_all
+      Member.delete_all
     end
 
-    xit "returns http success" do
-      get :add_contacts
-      expect(response).to have_http_status(:success)
+    it "should create contacts successfully" do
+      params = {
+        member_id: member.id,
+        contacts: contacts_params
+      }
+      post :add_contacts, :params => params
+      contacts = JSON.parse(response.body, {:symbolize_names => true})
+      expect(contacts.size).to be(2)
+      expect(contacts[0][:name]).to eq('email')
+      expect(contacts[0][:value]).to eq(contacts_params[0][:value])
+      expect(contacts[1][:name]).to eq('phone')
+      expect(contacts[1][:value]).to eq(contacts_params[1][:value])
+    end
+    it 'should update already existed contact' do
+      ContactSourceMemberMap.create(:contact_source => email, :value => Faker::Internet.email, :member => member)
+      params = {
+        member_id: member.id,
+        contacts: contacts_params
+      }
+      post :add_contacts, :params => params
+      contacts = JSON.parse(response.body, {:symbolize_names => true})
+      expect(contacts.size).to be(2)
+      expect(contacts[0][:name]).to eq('email')
+      expect(contacts[0][:value]).to eq(contacts_params[0][:value])
+      expect(contacts[1][:name]).to eq('phone')
+      expect(contacts[1][:value]).to eq(contacts_params[1][:value])
+    end
+    it 'should delete contact when value is blank' do
+      ContactSourceMemberMap.create(:contact_source => email, :value => Faker::Internet.email)
+      contacts_params[0][:value] = ""
+      params = {
+        member_id: member.id,
+        contacts: contacts_params
+      }
+      post :add_contacts, :params => params
+      contacts = JSON.parse(response.body, {:symbolize_names => true})
+      expect(contacts.size).to be(1)
+      expect(contacts[0][:name]).to eq('phone')
+      expect(contacts[0][:value]).to eq(contacts_params[1][:value])
+    end
+    it 'should not create any contact when value is blank' do
+      contacts_params[0][:value] = ""
+      contacts_params[1][:value] = ""
+      params = {
+        member_id: member.id,
+        contacts: contacts_params
+      }
+      post :add_contacts, :params => params
+      contacts = JSON.parse(response.body, {:symbolize_names => true})
+      expect(contacts.size).to be(0)
     end
   end
-
+  describe "unauthorised access" do
+    it 'should not allow user to add contact' do
+      post :add_contacts
+      expect(response.status).to eq(401)
+    end
+  end
 end

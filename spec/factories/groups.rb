@@ -17,8 +17,8 @@
 # @author: Kaustav Chakraborty (@phoenixTW)
 
 FactoryBot.define do
-    factory :group do
-        name "MyString"
-        description "MyText"
+    factory :group, class: Group do
+        name        "Some Name"
+        description Faker::Lorem.sentence
     end
 end

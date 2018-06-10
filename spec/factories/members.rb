@@ -18,8 +18,8 @@
 
 FactoryBot.define do
     factory :member do
-        name "MyString"
-        age ""
-        place "MyString"
+        name Faker::Name.name
+        age Faker::Number.number(2)
+        place Faker::Address.state
     end
 end

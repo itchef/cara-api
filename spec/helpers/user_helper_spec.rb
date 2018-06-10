@@ -29,5 +29,83 @@ require 'rails_helper'
 #   end
 # end
 RSpec.describe UserHelper, type: :helper do
-  pending "add some examples to (or delete) #{__FILE__}"
+  describe "is_sign_up_params_present" do
+    it 'should returns true when params contains all signup values' do
+      params = {
+        identification: Faker::Internet.email,
+        password: Faker::Internet.password,
+        password_confirmation: Faker::Internet.password
+      }
+      expect(helper.is_sign_up_params_present? params).to be_truthy
+    end
+
+    it 'should be falsy when identifier is not present on signup values' do
+      params = {
+        identification: "",
+        password: Faker::Internet.password,
+        password_confirmation: Faker::Internet.password
+      }
+      expect(helper.is_sign_up_params_present? params).to be_falsy
+    end
+
+    it 'should be falsy when password is not present on signup values' do
+      params = {
+        identification: Faker::Internet.email,
+        password: "",
+        password_confirmation: Faker::Internet.password
+      }
+      expect(helper.is_sign_up_params_present? params).to be_falsy
+    end
+
+    it 'should be falsy when password confirmation is not present on signup values' do
+      params = {
+        identification: Faker::Internet.email,
+        password: Faker::Internet.password,
+        password_confirmation: ""
+      }
+      expect(helper.is_sign_up_params_present? params).to be_falsy
+    end
+  end
+  describe "is_password_params_present" do
+    it 'should returns true when params contains all password change values' do
+      params = {
+        password: Faker::Internet.password,
+        password_confirmation: Faker::Internet.password
+      }
+      expect(helper.is_password_params_present? params).to be_truthy
+    end
+
+    it 'should be falsy when password is not present on password change values' do
+      params = {
+        password: "",
+        password_confirmation: Faker::Internet.password
+      }
+      expect(helper.is_password_params_present? params).to be_falsy
+    end
+
+    it 'should be falsy when password confirmation is not present on password change values' do
+      params = {
+        password: Faker::Internet.password,
+        password_confirmation: ""
+      }
+      expect(helper.is_password_params_present? params).to be_falsy
+    end
+  end
+  describe "passwords_matched?" do
+    it 'should be truthy when password matches' do
+      password = Faker::Internet.password
+      params = {
+        password: password,
+        password_confirmation: password
+      }
+      expect(helper.passwords_matched? params).to be_truthy
+    end
+    it 'should falsy when one of the params values are not equal' do
+      params = {
+        password: Faker::Internet.password,
+        password_confirmation: Faker::Internet.password
+      }
+      expect(helper.passwords_matched? params).to be_falsy
+    end
+  end
 end

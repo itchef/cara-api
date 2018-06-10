@@ -17,37 +17,40 @@
 # @author: Kaustav Chakraborty (@phoenixTW)
 
 class ContactsController < ApplicationController
-    include RailsApiAuth::Authentication
-    before_action :authenticate!
+  include RailsApiAuth::Authentication
+  before_action :authenticate!
 
-    def add_contacts
-        contacts = contacts_params
-        contacts.each do | contact |
-            contact_source = ContactSource.find_by(:name => contact[:name])
-            member = Member.find(get_member_id_from_params)
-            contact_source_member_map = ContactSourceMemberMap.find_or_initialize_by(:member => member,
-                                                                       :contact_source => contact_source)
-            if (not contact_source_member_map.new_record?) and not (contact[:value].blank?)
-                contact_source_member_map.update(:value => contact[:value])
-            elsif not contact[:value].blank?
-                contact_source_member_map[:value] = contact[:value]
-                contact_source_member_map.save
-            elsif contact[:value].blank?
-                contact_source_member_map.destroy unless contact_source_member_map.new_record?
-            else
-                render json: {message: 'Request Error. Please check the information.', detailed_message: contact_source_member_map.errors.messages }, :status => :bad_request
-                return
-            end
-        end
-        render json: contacts
-    end
+  def add_contacts
+    contacts = contacts_params
+    contacts.each do | contact |
+      contact_source = ContactSource.find_by(:name => contact[:name])
+      member = Member.find(get_member_id_from_params)
+      contact_source_member_map = ContactSourceMemberMap.find_or_initialize_by(:member => member,
+                                                                               :contact_source => contact_source)
 
-    private
-    def get_member_id_from_params
-        params.permit(:member_id)[:member_id]
+      if (not contact_source_member_map.new_record?) and not (contact[:value].blank?)
+        contact_source_member_map.update(:value => contact[:value])
+      elsif not contact[:value].blank?
+        contact_source_member_map[:value] = contact[:value]
+        contact_source_member_map.save
+      elsif contact[:value].blank?
+        contact_source_member_map.destroy unless contact_source_member_map.new_record?
+      else
+        render json: {message: 'Request Error. Please check the information.', detailed_message: contact_source_member_map.errors.messages }, :status => :bad_request
+        return
+      end
     end
+    render json: ContactSourceMemberMap
+                   .getAllContactListFor(get_member_id_from_params)
+                   .as_json(:except => :id)
+  end
 
-    def contacts_params
-        params.require(:contacts)
-    end
+  private
+  def get_member_id_from_params
+    params.permit(:member_id)[:member_id]
+  end
+
+  def contacts_params
+    params.require(:contacts)
+  end
 end

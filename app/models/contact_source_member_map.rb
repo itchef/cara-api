@@ -17,27 +17,38 @@
 # @author: Kaustav Chakraborty (@phoenixTW)
 
 class ContactSourceMemberMap < ApplicationRecord
-    belongs_to :member
-    belongs_to :contact_source
+  belongs_to :member
+  belongs_to :contact_source
 
-    def self.getContactListFor(member_id)
-        ContactSourceMemberMap.select(
-            [ContactSource.arel_table[:name], :value]
-        ).where(
-            ContactSourceMemberMap.arel_table[:member_id].eq(member_id).and(ContactSource.arel_table[:name].not_eq('phone'))
-        ).joins(
-            ContactSourceMemberMap.arel_table.join(ContactSource.arel_table).on(ContactSourceMemberMap.arel_table[:contact_source_id].eq(ContactSource.arel_table[:id])).join_sources
-        )
-    end
+  def self.getContactListFor(member_id)
+    ContactSourceMemberMap.select(
+      [ContactSource.arel_table[:name], :value]
+    ).where(
+      ContactSourceMemberMap.arel_table[:member_id].eq(member_id).and(ContactSource.arel_table[:name].not_eq('phone'))
+    ).joins(
+      ContactSourceMemberMap.arel_table.join(ContactSource.arel_table).on(ContactSourceMemberMap.arel_table[:contact_source_id].eq(ContactSource.arel_table[:id])).join_sources
+    )
+  end
 
-    def self.getPhoneNumbers(member_id)
-        ContactSourceMemberMap.select(
-            [ContactSource.arel_table[:name], :value]
-        ).where(
-            ContactSourceMemberMap.arel_table[:member_id].eq(member_id).and(ContactSource.arel_table[:name].eq('phone'))
-        ).joins(
-            ContactSourceMemberMap.arel_table.join(ContactSource.arel_table).on(ContactSourceMemberMap.arel_table[:contact_source_id].eq(ContactSource.arel_table[:id])).join_sources
-        )
-    end
+  def self.getPhoneNumbers(member_id)
+    ContactSourceMemberMap.select(
+      [ContactSource.arel_table[:name], :value]
+    ).where(
+      ContactSourceMemberMap.arel_table[:member_id].eq(member_id).and(ContactSource.arel_table[:name].eq('phone'))
+    ).joins(
+      ContactSourceMemberMap.arel_table.join(ContactSource.arel_table).on(ContactSourceMemberMap.arel_table[:contact_source_id].eq(ContactSource.arel_table[:id])).join_sources
+    )
+  end
 
+  def self.getAllContactListFor(member_id)
+    ContactSourceMemberMap.select(
+      [ContactSource.arel_table[:name].as('name'), :value]
+    ).where(
+      ContactSourceMemberMap.arel_table[:member_id].eq(member_id)
+    ).joins(
+      ContactSourceMemberMap.arel_table.join(ContactSource.arel_table).on(
+        ContactSourceMemberMap.arel_table[:contact_source_id].eq(ContactSource.arel_table[:id])
+      ).join_sources
+    )
+  end
 end

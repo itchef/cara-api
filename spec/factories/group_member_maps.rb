@@ -17,7 +17,7 @@
 # @author: Kaustav Chakraborty (@phoenixTW)
 
 FactoryBot.define do
-    factory :group_member_map do
+    factory :group_member_map, class: GroupMemberMap do
         member nil
         group nil
     end
