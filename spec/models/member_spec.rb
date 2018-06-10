@@ -19,5 +19,22 @@
 require 'rails_helper'
 
 RSpec.describe Member, type: :model do
-    pending "add some examples to (or delete) #{__FILE__}"
+  describe "validations" do
+    it 'should should throw error when name is not present' do
+      member = Member.create(:name => "", :age => 10, :place => Faker::Address.state)
+      expect(member.valid?).to be_falsy
+      expect(member.errors.messages).to eq({ :name=> ["can't be blank"] })
+    end
+    it 'should should throw error when age is not present' do
+      member = Member.create(:name => Faker::Name.name, :age => "", :place => Faker::Address.state)
+      expect(member.valid?).to be_falsy
+      expect(member.errors.messages).to eq({ :age=> ["can't be blank"] })
+    end
+
+    it 'should should throw error when place is not present' do
+      member = Member.create(:name => Faker::Name.name, :age => 10, :place => "")
+      expect(member.valid?).to be_falsy
+      expect(member.errors.messages).to eq({ :place=> ["can't be blank"] })
+    end
+  end
 end

@@ -18,5 +18,6 @@
 
 require 'rails_helper'
 
-RSpec.describe SessionController, type: :controller do
+RSpec.describe SessionController, type: :request do
+  #TODO: Need to write test cases
 end

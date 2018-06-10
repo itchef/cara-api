@@ -19,5 +19,90 @@
 require 'rails_helper'
 
 RSpec.describe ContactSourceMemberMap, type: :model do
-    pending "add some examples to (or delete) #{__FILE__}"
+  describe "get_contact_list_for" do
+    before(:each) do
+      FactoryBot.create(:contact_source, :name => "email")
+      FactoryBot.create(:contact_source, :name => "phone")
+      FactoryBot.create(:member, :name => "Member 1")
+      FactoryBot.create(:contact_source_member_map,
+                        :member => Member.first,
+                        :contact_source => ContactSource.find_by(:name => "email"),
+                        :value => Faker::Internet.email)
+
+      FactoryBot.create(:contact_source_member_map,
+                        :member => Member.first,
+                        :contact_source => ContactSource.find_by(:name => "phone"),
+                        :value => Faker::Number.number(10))
+    end
+
+    after(:each) do
+      ContactSourceMemberMap.delete_all
+      ContactSource.delete_all
+      Member.delete_all
+    end
+    it 'should get contact list' do
+      contacts = ContactSourceMemberMap.get_contact_list_for(Member.first[:id])
+      expect(contacts.size).to be(1)
+      expect(contacts.first[:name]).to eq("email")
+      expect(contacts.first[:value]).to eq(ContactSourceMemberMap.first[:value])
+    end
+  end
+  describe "get_phone_numbers" do
+    before(:each) do
+      FactoryBot.create(:contact_source, :name => "email")
+      FactoryBot.create(:contact_source, :name => "phone")
+      FactoryBot.create(:member, :name => "Member 1")
+      FactoryBot.create(:contact_source_member_map,
+                        :member => Member.first,
+                        :contact_source => ContactSource.find_by(:name => "email"),
+                        :value => Faker::Internet.email)
+
+      FactoryBot.create(:contact_source_member_map,
+                        :member => Member.first,
+                        :contact_source => ContactSource.find_by(:name => "phone"),
+                        :value => Faker::Number.number(10))
+    end
+
+    after(:each) do
+      ContactSourceMemberMap.delete_all
+      ContactSource.delete_all
+      Member.delete_all
+    end
+    it 'should get contact list' do
+      contacts = ContactSourceMemberMap.get_phone_numbers(Member.first[:id])
+      expect(contacts.size).to be(1)
+      expect(contacts.first[:name]).to eq("phone")
+      expect(contacts.first[:value]).to eq(ContactSourceMemberMap.last[:value])
+    end
+  end
+  describe "get_all_contact_list_for" do
+    before(:each) do
+      FactoryBot.create(:contact_source, :name => "email")
+      FactoryBot.create(:contact_source, :name => "phone")
+      FactoryBot.create(:member, :name => "Member 1")
+      FactoryBot.create(:contact_source_member_map,
+                        :member => Member.first,
+                        :contact_source => ContactSource.find_by(:name => "email"),
+                        :value => Faker::Internet.email)
+
+      FactoryBot.create(:contact_source_member_map,
+                        :member => Member.first,
+                        :contact_source => ContactSource.find_by(:name => "phone"),
+                        :value => Faker::Number.number(10))
+    end
+
+    after(:each) do
+      ContactSourceMemberMap.delete_all
+      ContactSource.delete_all
+      Member.delete_all
+    end
+    it 'should get contact list' do
+      contacts = ContactSourceMemberMap.get_all_contact_list_for(Member.first[:id])
+      expect(contacts.size).to be(2)
+      expect(contacts.first[:name]).to eq("email")
+      expect(contacts.first[:value]).to eq(ContactSourceMemberMap.first[:value])
+      expect(contacts.last[:name]).to eq("phone")
+      expect(contacts.last[:value]).to eq(ContactSourceMemberMap.last[:value])
+    end
+  end
 end

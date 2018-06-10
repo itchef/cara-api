@@ -27,10 +27,10 @@ class MemberPresenter < Oprah::Presenter
             place: place,
             photo_url: photo_url,
             contacts: ContactSourceMemberMap
-                          .getContactListFor(id)
+                          .get_contact_list_for(id)
                           .as_json(:except => :id),
             phone_numbers: ContactSourceMemberMap
-                       .getPhoneNumbers(id)
+                       .get_phone_numbers(id)
                        .as_json(:except => :id)
         }
     end

@@ -41,7 +41,7 @@ class ContactsController < ApplicationController
       end
     end
     render json: ContactSourceMemberMap
-                   .getAllContactListFor(get_member_id_from_params)
+                   .get_all_contact_list_for(get_member_id_from_params)
                    .as_json(:except => :id)
   end
 

@@ -19,5 +19,23 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  let(:subscibed_admin_user) {FactoryBot.create(:admin_subscribed_user)}
+  let(:secondary_user) {FactoryBot.create(:secondary_user)}
+
+  describe "find_by_username" do
+    before(:each) do
+    end
+
+    after(:each) do
+      User.delete_all
+    end
+    it 'should user by username' do
+      user = User.find_by_username(subscibed_admin_user.login[:identification])
+      expect(user[:first_name]).to eq(subscibed_admin_user[:first_name])
+      expect(user[:last_name]).to eq(subscibed_admin_user[:last_name])
+      expect(
+        User.find_by_username("SOME_USER_NAME")
+      ).to be_nil
+    end
+  end
 end

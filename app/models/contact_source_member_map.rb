@@ -20,7 +20,7 @@ class ContactSourceMemberMap < ApplicationRecord
   belongs_to :member
   belongs_to :contact_source
 
-  def self.getContactListFor(member_id)
+  def self.get_contact_list_for(member_id)
     ContactSourceMemberMap.select(
       [ContactSource.arel_table[:name], :value]
     ).where(
@@ -30,7 +30,7 @@ class ContactSourceMemberMap < ApplicationRecord
     )
   end
 
-  def self.getPhoneNumbers(member_id)
+  def self.get_phone_numbers(member_id)
     ContactSourceMemberMap.select(
       [ContactSource.arel_table[:name], :value]
     ).where(
@@ -40,7 +40,7 @@ class ContactSourceMemberMap < ApplicationRecord
     )
   end
 
-  def self.getAllContactListFor(member_id)
+  def self.get_all_contact_list_for(member_id)
     ContactSourceMemberMap.select(
       [ContactSource.arel_table[:name].as('name'), :value]
     ).where(

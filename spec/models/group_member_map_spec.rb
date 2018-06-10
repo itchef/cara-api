@@ -19,5 +19,22 @@
 require 'rails_helper'
 
 RSpec.describe GroupMemberMap, type: :model do
-    pending "add some examples to (or delete) #{__FILE__}"
+  describe "get_all_assigned_members" do
+    before(:each) do
+      FactoryBot.create(:member, :name => "Member 1")
+      FactoryBot.create(:group, :name => "Group 1")
+      FactoryBot.create(:group_member_map, :member => Member.first, :group => Group.first)
+    end
+    after(:each) do
+      GroupMemberMap.delete_all
+      Member.delete_all
+      Group.delete_all
+    end
+
+    it 'should get all assigned members' do
+      all_assigned_members = GroupMemberMap.get_all_assigned_members
+      expect(all_assigned_members.size).to be(1)
+      expect(all_assigned_members[0]).to eq(Member.first)
+    end
+  end
 end

@@ -19,5 +19,55 @@
 require 'rails_helper'
 
 RSpec.describe Group, type: :model do
-    pending "add some examples to (or delete) #{__FILE__}"
+  describe "validations" do
+    it 'should should throw error when name is not present' do
+      member = Group.create(:name => "", :description => Faker::Lorem.sentence)
+      expect(member.valid?).to be_falsy
+      expect(member.errors.messages).to eq({ :name=> ["can't be blank"] })
+    end
+    it 'should should throw error when age is not present' do
+      member = Group.create(:name => "Group 1", :description => "")
+      expect(member.valid?).to be_falsy
+      expect(member.errors.messages).to eq({ :description=> ["can't be blank"] })
+    end
+  end
+
+  describe "get_assigned_members_list" do
+    before(:each) do
+      FactoryBot.create(:member, :name => "Member 1")
+      FactoryBot.create(:group, :name => "Group 1")
+      FactoryBot.create(:group_member_map, :member => Member.first, :group => Group.first)
+    end
+    after(:each) do
+      GroupMemberMap.delete_all
+      Member.delete_all
+      Group.delete_all
+    end
+    it 'should get list of assigned members' do
+      members = Group.get_assigned_members_list(Group.first[:id])
+      expect(members.size).to be(1)
+      expect(members[0]).to eq(Member.first)
+      FactoryBot.create(:group, :name => "Group 2")
+      expect(Group.get_assigned_members_list(Group.last[:id])).to be_empty
+    end
+  end
+  describe "get_assigned_members_list_with_full_data" do
+    before(:each) do
+      FactoryBot.create(:member, :name => "Member 1")
+      FactoryBot.create(:group, :name => "Group 1")
+      FactoryBot.create(:group_member_map, :member => Member.first, :group => Group.first)
+    end
+    after(:each) do
+      GroupMemberMap.delete_all
+      Member.delete_all
+      Group.delete_all
+    end
+    it 'should get list of assigned members with full data' do
+      members = Group.get_assigned_members_list_with_full_data(Group.first[:id])
+      expect(members.size).to be(1)
+      expect(members[0]).to eq(Member.first)
+      FactoryBot.create(:group, :name => "Group 2")
+      expect(Group.get_assigned_members_list_with_full_data(Group.last[:id])).to be_empty
+    end
+  end
 end
