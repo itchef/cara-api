@@ -25,11 +25,6 @@ RSpec.describe Group, type: :model do
       expect(member.valid?).to be_falsy
       expect(member.errors.messages).to eq({ :name=> ["can't be blank"] })
     end
-    it 'should should throw error when age is not present' do
-      member = Group.create(:name => "Group 1", :description => "")
-      expect(member.valid?).to be_falsy
-      expect(member.errors.messages).to eq({ :description=> ["can't be blank"] })
-    end
   end
 
   describe "get_assigned_members_list" do

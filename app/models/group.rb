@@ -18,7 +18,6 @@
 
 class Group < ApplicationRecord
   validates :name, presence: true
-  validates :description, presence: true
   def self.get_assigned_members_list(group_id)
     Member.select(:id, :name, :photo_url)
       .where(

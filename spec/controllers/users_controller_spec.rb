@@ -38,6 +38,7 @@ RSpec.describe UsersController, type: :controller do
         last_name: 'Smith'
       }
       allow(controller).to receive(:authenticate!).and_return(true)
+      allow(controller).to receive(:current_login).and_return({ :user_id =>  subscibed_admin_user[:id]})
     end
     after(:each) do
       User.delete_all
@@ -46,7 +47,7 @@ RSpec.describe UsersController, type: :controller do
       post :create, :params => user
       user = JSON.parse(response.body, {:symbolize_names => true})
       expect(response.content_type).to eq "application/json"
-      expect(User.all.size).to eq 1
+      expect(User.all.size).to eq 2
       expect(user[:first_name]).to eq 'John'
       expect(user[:last_name]).to eq 'Smith'
       expect(user[:username]).to eq 'caraUser'
@@ -65,6 +66,7 @@ RSpec.describe UsersController, type: :controller do
     @user = nil
     before(:each) do
       allow(controller).to receive(:authenticate!).and_return(true)
+      allow(controller).to receive(:current_login).and_return({ :user_id =>  subscibed_admin_user[:id]})
     end
     after(:each) do
       User.delete_all
@@ -97,6 +99,7 @@ RSpec.describe UsersController, type: :controller do
   describe "GET #unsubscribe" do
     before(:each) do
       allow(controller).to receive(:authenticate!).and_return(true)
+      allow(controller).to receive(:current_login).and_return({ :user_id =>  subscibed_admin_user[:id]})
       get :unsubscribe, :params => {:id => secondary_user[:id]}
     end
     after(:each) do
@@ -118,6 +121,7 @@ RSpec.describe UsersController, type: :controller do
   describe "GET #subscribe" do
     before(:each) do
       allow(controller).to receive(:authenticate!).and_return(true)
+      allow(controller).to receive(:current_login).and_return({ :user_id =>  subscibed_admin_user[:id]})
     end
     after(:each) do
       User.delete_all

@@ -18,6 +18,7 @@
 
 class GroupsController < ApplicationController
   include RailsApiAuth::Authentication
+  include AbilityHelper
   before_action :authenticate!
 
   def index
@@ -25,6 +26,7 @@ class GroupsController < ApplicationController
   end
 
   def create
+    can_manage?
     group = Group.new(group_params)
     if group.valid?
       group.save
@@ -35,6 +37,7 @@ class GroupsController < ApplicationController
   end
 
   def assign_member
+    can_manage?
     group_member_map = GroupMemberMap.new(group_member_map_params)
     if group_member_map.valid?
       group_member_map.save
@@ -45,6 +48,7 @@ class GroupsController < ApplicationController
   end
 
   def unassigned_member
+    can_manage?
     group_member_map = GroupMemberMap.find_by(group_member_map_params)
     if not group_member_map.nil? and group_member_map.delete
       render json: Oprah.present(Member.find(group_member_map[:member_id])).basic

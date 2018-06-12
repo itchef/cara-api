@@ -21,12 +21,15 @@ require 'rails_helper'
 RSpec.describe MembersController, type: :controller do
   describe "GET #index" do
     before(:each) do
+      admin_user = FactoryBot.create(:admin_subscribed_user)
+      allow(controller).to receive(:current_login).and_return({ :user_id =>  admin_user[:id]})
       allow(controller).to receive(:authenticate!).and_return(true)
       FactoryBot.create(:member, :name => "Member 1")
       FactoryBot.create(:member, :name => "Member 2")
     end
     after(:each) do
       Member.delete_all
+      User.delete_all
     end
     it 'should get list of members' do
       get :index
@@ -44,12 +47,15 @@ RSpec.describe MembersController, type: :controller do
   end
   describe "GET #names" do
     before(:each) do
+      admin_user = FactoryBot.create(:admin_subscribed_user)
+      allow(controller).to receive(:current_login).and_return({ :user_id =>  admin_user[:id]})
       allow(controller).to receive(:authenticate!).and_return(true)
       FactoryBot.create(:member, :name => "Member 1")
       FactoryBot.create(:member, :name => "Member 2")
     end
     after(:each) do
       Member.delete_all
+      User.delete_all
     end
     it 'should get list of names' do
       get :names
@@ -63,12 +69,15 @@ RSpec.describe MembersController, type: :controller do
   end
   describe "GET #show" do
     before(:each) do
+      admin_user = FactoryBot.create(:admin_subscribed_user)
+      allow(controller).to receive(:current_login).and_return({ :user_id =>  admin_user[:id]})
       allow(controller).to receive(:authenticate!).and_return(true)
       FactoryBot.create(:member, :name => "Member 1")
       FactoryBot.create(:member, :name => "Member 2")
     end
     after(:each) do
       Member.delete_all
+      User.delete_all
     end
     it 'should get member details' do
       get :show, :params => { id: Member.first[:id] }
@@ -80,10 +89,13 @@ RSpec.describe MembersController, type: :controller do
   end
   describe "POST #create" do
     before(:each) do
+      admin_user = FactoryBot.create(:admin_subscribed_user)
+      allow(controller).to receive(:current_login).and_return({ :user_id =>  admin_user[:id]})
       allow(controller).to receive(:authenticate!).and_return(true)
     end
     after(:each) do
       Member.delete_all
+      User.delete_all
     end
 
     it 'should create a member successfully' do
@@ -145,11 +157,14 @@ RSpec.describe MembersController, type: :controller do
   end
   describe "PUT #update" do
     before(:each) do
+      admin_user = FactoryBot.create(:admin_subscribed_user)
+      allow(controller).to receive(:current_login).and_return({ :user_id =>  admin_user[:id]})
       allow(controller).to receive(:authenticate!).and_return(true)
       FactoryBot.create(:member)
     end
     after(:each) do
       Member.delete_all
+      User.delete_all
     end
 
     it 'should update an existing user record' do
@@ -167,11 +182,14 @@ RSpec.describe MembersController, type: :controller do
   end
   describe "DELETE #destroy" do
     before(:each) do
+      admin_user = FactoryBot.create(:admin_subscribed_user)
+      allow(controller).to receive(:current_login).and_return({ :user_id =>  admin_user[:id]})
       allow(controller).to receive(:authenticate!).and_return(true)
       FactoryBot.create(:member)
     end
     after(:each) do
       Member.delete_all
+      User.delete_all
     end
 
     it 'should update an existing user record' do

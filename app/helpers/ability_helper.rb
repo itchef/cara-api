@@ -16,22 +16,11 @@
 
 # @author: Kaustav Chakraborty (@phoenixTW)
 
-module UserHelper
-  def is_sign_up_params_present?(params)
-    return false if
-      params[:identification].empty? || params[:password].empty? || params[:password_confirmation].empty?
-    true
-  end
-
-  def is_password_params_present?(params)
-    return false if
-      params[:password].empty? || params[:password_confirmation].empty?
-    true
-  end
-
-  def passwords_matched?(params)
-    return true if
-      params[:password] === params[:password_confirmation]
-    false
+module AbilityHelper
+  def can_manage?
+    if not User.find(current_login[:user_id]).admin?
+      raise Exceptions::PermissionDenied
+    end
+    return true
   end
 end

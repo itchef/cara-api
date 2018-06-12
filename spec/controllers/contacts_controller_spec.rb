@@ -29,6 +29,7 @@ RSpec.describe ContactsController, type: :controller do
     contacts_params = []
     before(:each) do
       allow(controller).to receive(:authenticate!).and_return(true)
+      allow(controller).to receive(:can_manage?).and_return(true)
       contacts_params = [
         { name: email[:name], value: Faker::Internet.email },
         { name: phone[:name], value: Faker::Number.number(10) }

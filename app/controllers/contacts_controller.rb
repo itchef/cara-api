@@ -18,16 +18,17 @@
 
 class ContactsController < ApplicationController
   include RailsApiAuth::Authentication
+  include AbilityHelper
   before_action :authenticate!
 
   def add_contacts
+    can_manage?
     contacts = contacts_params
     contacts.each do | contact |
       contact_source = ContactSource.find_by(:name => contact[:name])
       member = Member.find(get_member_id_from_params)
       contact_source_member_map = ContactSourceMemberMap.find_or_initialize_by(:member => member,
                                                                                :contact_source => contact_source)
-
       if (not contact_source_member_map.new_record?) and not (contact[:value].blank?)
         contact_source_member_map.update(:value => contact[:value])
       elsif not contact[:value].blank?

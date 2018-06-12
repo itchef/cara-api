@@ -17,10 +17,14 @@
 # @author: Kaustav Chakraborty (@phoenixTW)
 
 class User < ApplicationRecord
-    has_one :login, :dependent => :destroy
+  has_one :login, :dependent => :destroy
 
-    def self.find_by_username(username)
-        login = Login.find_by_identification(username)
-        find(login.user_id) if login.present?
-    end
+  def self.find_by_username(username)
+    login = Login.find_by_identification(username)
+    find(login.user_id) if login.present?
+  end
+
+  def admin?
+    self.is_admin
+  end
 end

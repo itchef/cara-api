@@ -22,6 +22,8 @@ RSpec.describe GroupsController, type: :controller do
 
   describe "GET #index" do
     before(:each) do
+      admin_user = FactoryBot.create(:admin_subscribed_user)
+      allow(controller).to receive(:current_login).and_return({ :user_id =>  admin_user[:id]})
       allow(controller).to receive(:authenticate!).and_return(true)
       FactoryBot.create(:group, :name => "Group 1")
       FactoryBot.create(:group, :name => "Group 2")
@@ -34,6 +36,7 @@ RSpec.describe GroupsController, type: :controller do
       GroupMemberMap.delete_all
       Group.delete_all
       Member.delete_all
+      User.delete_all
     end
     it 'should get all group list' do
       get :index
@@ -46,10 +49,13 @@ RSpec.describe GroupsController, type: :controller do
   end
   describe "POST #create" do
     before(:each) do
+      admin_user = FactoryBot.create(:admin_subscribed_user)
+      allow(controller).to receive(:current_login).and_return({ :user_id =>  admin_user[:id]})
       allow(controller).to receive(:authenticate!).and_return(true)
     end
     after(:each) do
       Group.delete_all
+      User.delete_all
     end
     it 'should create a group successfully' do
       params = {
@@ -62,18 +68,6 @@ RSpec.describe GroupsController, type: :controller do
       group = JSON.parse(response.body, {:symbolize_names => true})
       expect(group[:name]).to eq(params[:group][:name])
       expect(group[:name]).to eq(Group.find_by(:name => "Group 1")[:name])
-    end
-    it 'should render error message when group description is not present' do
-      params = {
-        group: {
-          name: "Group 1",
-          description: ""
-        }
-      }
-      post :create, :params => params
-      error = JSON.parse(response.body, {:symbolize_names => true})
-      expect(response).to have_http_status(:bad_request)
-      expect(error[:message]).to eq("Request Error. Group name / description can not be blank")
     end
 
     it 'should render error message when group name is not present' do
@@ -95,11 +89,14 @@ RSpec.describe GroupsController, type: :controller do
 
     before(:each) do
       allow(controller).to receive(:authenticate!).and_return(true)
+      admin_user = FactoryBot.create(:admin_subscribed_user)
+      allow(controller).to receive(:current_login).and_return({ :user_id =>  admin_user[:id]})
     end
     after(:each) do
       GroupMemberMap.delete_all
       Member.delete_all
       Group.delete_all
+      User.delete_all
     end
     it 'should assign a member to a group' do
       params = {
@@ -131,6 +128,8 @@ RSpec.describe GroupsController, type: :controller do
     let(:member) { FactoryBot.create(:member) }
 
     before(:each) do
+      admin_user = FactoryBot.create(:admin_subscribed_user)
+      allow(controller).to receive(:current_login).and_return({ :user_id =>  admin_user[:id]})
       allow(controller).to receive(:authenticate!).and_return(true)
       FactoryBot.create(:group_member_map, :member_id => member[:id], :group_id => group[:id])
     end
@@ -138,6 +137,7 @@ RSpec.describe GroupsController, type: :controller do
       GroupMemberMap.delete_all
       Member.delete_all
       Group.delete_all
+      User.delete_all
     end
     it 'should unassign a member from a group' do
       params = {

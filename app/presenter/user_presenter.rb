@@ -17,13 +17,23 @@
 # @author: Kaustav Chakraborty (@phoenixTW)
 
 class UserPresenter < Oprah::Presenter
-    def json
-        {
-            id: id,
-            first_name: first_name,
-            last_name: last_name,
-            username: login[:identification],
-            unsubscribed: is_unsubscribed
-        }
-    end
+  def json
+    {
+      id: id,
+      first_name: first_name,
+      last_name: last_name,
+      username: login[:identification],
+      unsubscribed: is_unsubscribed,
+      admin: is_admin
+    }
+  end
+
+  def recent
+    {
+      first_name: first_name,
+      last_name: last_name,
+      username: login[:identification],
+      admin: is_admin
+    }
+  end
 end

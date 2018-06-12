@@ -37,13 +37,16 @@ RSpec.describe DashboardController, type: :controller do
     end
 
     before(:each) do
-      allow(controller).to receive(:authenticate!).and_return(true)
       generate_bulk_data
+      admin_user = FactoryBot.create(:admin_subscribed_user)
+      allow(controller).to receive(:authenticate!).and_return(true)
+      allow(controller).to receive(:current_login).and_return({ :user_id =>  admin_user[:id]})
     end
     after(:each) do
       GroupMemberMap.delete_all
       Member.delete_all
       Group.delete_all
+      User.delete_all
     end
 
     it 'should get dashboard specific groups and member list' do

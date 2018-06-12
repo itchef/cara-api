@@ -17,60 +17,64 @@
 # @author: Kaustav Chakraborty (@phoenixTW)
 
 class MembersController < ApplicationController
-    include RailsApiAuth::Authentication
-    before_action :authenticate!
-    before_action :set_member, only: [:show, :update, :destroy]
+  include RailsApiAuth::Authentication
+  include AbilityHelper
+  before_action :authenticate!
+  before_action :set_member, only: [:show, :update, :destroy]
 
-    def index
-        @members = Member.all.map {|member| Oprah.present(member).json }
-        render json: @members
-    end
+  def index
+    @members = Member.all.map {|member| Oprah.present(member).json }
+    render json: @members
+  end
 
-    def names
-        render json: Member.all.select(:id, :name)
-    end
+  def names
+    render json: Member.all.select(:id, :name)
+  end
 
-    def show
-        render json: Oprah.present(@member).json
-    end
+  def show
+    render json: Oprah.present(@member).json
+  end
 
-    def create
-        member = Member.new(member_params)
-        if member.valid?
-            member.save
-            render json: member
-        else
-            render json: {message: 'Request Error. Member name / age / place can not be null.', detailed_message: member.errors.messages }, :status => :bad_request
-        end
+  def create
+    can_manage?
+    member = Member.new(member_params)
+    if member.valid?
+      member.save
+      render json: member
+    else
+      render json: {message: 'Request Error. Member name / age / place can not be null.', detailed_message: member.errors.messages }, :status => :bad_request
     end
+  end
 
-    def update
-        if @member.update_attributes(member_params)
-            @member.update(member_params)
-            render json: @member
-        else
-            render json: {message: 'Member information is not updated.', detailed_message: @member.errors.messages },
-                   :status =>
-                :bad_request
-        end
+  def update
+    can_manage?
+    if @member.update_attributes(member_params)
+      @member.update(member_params)
+      render json: @member
+    else
+      render json: {message: 'Member information is not updated.', detailed_message: @member.errors.messages },
+             :status =>
+               :bad_request
     end
+  end
 
-    def destroy
-        if @member.destroy
-            render json: @member, status: :ok
-        else
-            render json: {message: 'Member is unable to get deleted.', detailed_message: @member.errors.messages },
-                   :status =>
-                       :bad_request
-        end
+  def destroy
+    can_manage?
+    if @member.destroy
+      render json: @member, status: :ok
+    else
+      render json: {message: 'Member is unable to get deleted.', detailed_message: @member.errors.messages },
+             :status =>
+               :bad_request
     end
+  end
 
-    private
-    def set_member
-        @member = Member.find(params[:id])
-    end
+  private
+  def set_member
+    @member = Member.find(params[:id])
+  end
 
-    def member_params
-        params.require(:personal).permit(:name, :age, :place, :photo_url)
-    end
+  def member_params
+    params.require(:personal).permit(:name, :age, :place, :photo_url)
+  end
 end

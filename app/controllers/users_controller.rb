@@ -18,15 +18,19 @@
 
 class UsersController < ApplicationController
   include RailsApiAuth::Authentication
+  include UserHelper
+  include AbilityHelper
+
   before_action :authenticate!
   before_action :set_user, only: [:update_password, :unsubscribe, :subscribe]
-  include UserHelper
 
   def index
+    can_manage?
     render json: User.all.map {|user| Oprah.present(user).json}
   end
 
   def create
+    can_manage?
     user = User.new(user_params)
     if user.valid? && is_sign_up_params_present?(login_params)
       user.save && user.create_login(login_params)
@@ -39,6 +43,7 @@ class UsersController < ApplicationController
   end
 
   def update_password
+    can_manage?
     if @user && is_password_params_present?(password_params) && passwords_matched?(password_params)
       @user.login.update_attribute(:password, password_params[:password])
       render json: Oprah.present(@user).json
@@ -48,6 +53,7 @@ class UsersController < ApplicationController
   end
 
   def subscribe
+    can_manage?
     if @user[:is_unsubscribed]
       @user.update_attribute(:is_unsubscribed, false)
       render json: Oprah.present(@user).json
@@ -57,12 +63,17 @@ class UsersController < ApplicationController
   end
 
   def unsubscribe
+    can_manage?
     unless @user[:is_unsubscribed]
       @user.update_attribute(:is_unsubscribed, true)
       render json: Oprah.present(@user).json
     else
       render json: {message: "#{@user.login.identification} is already unsubscribed"}, :status => :bad_request
     end
+  end
+
+  def recent
+    render json: Oprah.present(User.find(current_login[:user_id])).recent
   end
 
   private

@@ -17,22 +17,24 @@
 # @author: Kaustav Chakraborty (@phoenixTW)
 
 Rails.application.routes.draw do
-    # Custom Routes
-    post '/token' => "session#create", defaults: { format: :json }
+  # Custom Routes
+  post '/access-token' => "session#create"
+  post '/token', to: redirect('/', status: 404)
 
-    post 'contacts/add_contacts', defaults: { format: :json }
-    get 'members/names', defaults: { format: :json }
+  post 'contacts/add_contacts', defaults: { format: :json }
+  get 'members/names', defaults: { format: :json }
 
-    post 'groups/assign_member', defaults: { format: :json }
-    delete 'groups/:group_id/unassigned_member/:member_id' => "groups#unassigned_member", defaults: { format: :json }
+  post 'groups/assign_member', defaults: { format: :json }
+  delete 'groups/:group_id/unassigned_member/:member_id' => "groups#unassigned_member", defaults: { format: :json }
 
-    get 'users' => "users#index", defaults: { format: :json }
-    post 'users' => "users#create", defaults: { format: :json }
-    put 'users/:id/update_password' => "users#update_password", defaults: { format: :json }
-    get 'users/:id/unsubscribe' => "users#unsubscribe", defaults: { format: :json }
-    get 'users/:id/subscribe' => "users#subscribe", defaults: { format: :json }
+  get 'users' => "users#index", defaults: { format: :json }
+  post 'users' => "users#create", defaults: { format: :json }
+  put 'users/:id/update_password' => "users#update_password", defaults: { format: :json }
+  get 'users/:id/unsubscribe' => "users#unsubscribe", defaults: { format: :json }
+  get 'users/:id/subscribe' => "users#subscribe", defaults: { format: :json }
+  get 'users/recent' => "users#recent", defaults: { format: :json }
 
-    resources :members, defaults: { format: :json }
-    resources :groups, defaults: { format: :json }
-    resources :dashboard, only: [:index], defaults: { format: :json }
+  resources :members, defaults: { format: :json }
+  resources :groups, defaults: { format: :json }
+  resources :dashboard, only: [:index], defaults: { format: :json }
 end

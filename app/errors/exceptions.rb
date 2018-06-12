@@ -16,22 +16,7 @@
 
 # @author: Kaustav Chakraborty (@phoenixTW)
 
-module UserHelper
-  def is_sign_up_params_present?(params)
-    return false if
-      params[:identification].empty? || params[:password].empty? || params[:password_confirmation].empty?
-    true
-  end
-
-  def is_password_params_present?(params)
-    return false if
-      params[:password].empty? || params[:password_confirmation].empty?
-    true
-  end
-
-  def passwords_matched?(params)
-    return true if
-      params[:password] === params[:password_confirmation]
-    false
-  end
+module Exceptions
+  class AuthenticationError < StandardError; end
+  class PermissionDenied < AuthenticationError; end
 end
