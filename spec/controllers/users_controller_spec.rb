@@ -35,7 +35,8 @@ RSpec.describe UsersController, type: :controller do
         password: 'password',
         password_confirmation: 'password',
         first_name: 'John',
-        last_name: 'Smith'
+        last_name: 'Smith',
+        is_admin: true
       }
       allow(controller).to receive(:authenticate!).and_return(true)
       allow(controller).to receive(:current_login).and_return({ :user_id =>  subscibed_admin_user[:id]})
