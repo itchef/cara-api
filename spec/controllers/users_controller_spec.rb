@@ -140,4 +140,65 @@ RSpec.describe UsersController, type: :controller do
       expect(error[:message]).to eq "#{secondary_user.login[:identification]} is already subscribed"
     end
   end
+
+  describe "PUT #admin_status" do
+    before(:each) do
+      allow(controller).to receive(:authenticate!).and_return(true)
+      allow(controller).to receive(:current_login).and_return({ :user_id =>  subscibed_admin_user[:id]})
+    end
+    after(:each) do
+      User.delete_all
+    end
+
+    it 'should assign admin status successfully' do
+      params = {
+        :id => secondary_user[:id],
+        :status => true
+      }
+      put :admin_status, :params => params
+      response_data = JSON.parse(response.body, {:symbolize_names => true})
+      expect(response_data[:first_name]).to eq(secondary_user[:first_name])
+      expect(response_data[:last_name]).to eq(secondary_user[:last_name])
+      expect(response_data[:admin]).to be_truthy
+
+      params[:status] = false
+      put :admin_status, :params => params
+      response_data = JSON.parse(response.body, {:symbolize_names => true})
+      expect(response_data[:first_name]).to eq(secondary_user[:first_name])
+      expect(response_data[:last_name]).to eq(secondary_user[:last_name])
+      expect(response_data[:admin]).to be_falsy
+    end
+
+    it 'should throw error when status is same with the user\'s existing status' do
+      params = {
+        id: secondary_user[:id],
+        status: false
+      }
+      put :admin_status, :params => params
+      error = JSON.parse(response.body, {:symbolize_names => true})
+      expect(response).to have_http_status(:bad_request)
+      expect(error[:message]).to eq "Invalid request. Unable to update admin status."
+    end
+
+    it 'should throw error when status is not present on request' do
+      params = {
+        :id => secondary_user[:id]
+      }
+      put :admin_status, :params => params
+      error = JSON.parse(response.body, {:symbolize_names => true})
+      expect(response).to have_http_status(:bad_request)
+      expect(error[:message]).to eq "Invalid request. Unable to update admin status."
+    end
+
+    it 'should throw error when status is some random text' do
+      params = {
+        :id => secondary_user[:id],
+        :status => "Hello"
+      }
+      put :admin_status, :params => params
+      error = JSON.parse(response.body, {:symbolize_names => true})
+      expect(response).to have_http_status(:bad_request)
+      expect(error[:message]).to eq "Invalid request. Unable to update admin status."
+    end
+  end
 end

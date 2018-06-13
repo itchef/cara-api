@@ -22,7 +22,7 @@ class UsersController < ApplicationController
   include AbilityHelper
 
   before_action :authenticate!
-  before_action :set_user, only: [:update_password, :unsubscribe, :subscribe]
+  before_action :set_user, only: [:update_password, :unsubscribe, :subscribe, :admin_status]
 
   def index
     can_manage?
@@ -76,7 +76,30 @@ class UsersController < ApplicationController
     render json: Oprah.present(User.find(current_login[:user_id])).recent
   end
 
+  def admin_status
+    can_manage?
+    if (is_boolean_type_value_present params[:status]) and @user[:is_admin] != to_bool(params[:status])
+      @user.update_attribute(:is_admin, params[:status])
+      render json: Oprah.present(@user).json
+    else
+      render json: {message: "Invalid request. Unable to update admin status."}, :status => :bad_request
+    end
+  end
+
+
   private
+
+  def is_boolean_type_value_present(bool)
+    (bool.to_s.downcase === "true") or (bool.to_s.downcase === "false")
+  end
+
+  def to_bool(val)
+    if val.to_s.downcase == "true"
+      true
+    else
+      false
+    end
+  end
 
   def user_params
     params.permit(:first_name, :last_name, :is_admin)
