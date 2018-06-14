@@ -33,6 +33,7 @@ Rails.application.routes.draw do
   get 'users/:id/unsubscribe' => "users#unsubscribe", defaults: { format: :json }
   get 'users/:id/subscribe' => "users#subscribe", defaults: { format: :json }
   put 'users/:id/admin_status' => "users#admin_status", defaults: { format: :json }
+  delete 'users/:id/archive' => "users#archive", defaults: { format: :json }
   get 'users/recent' => "users#recent", defaults: { format: :json }
 
   resources :members, defaults: { format: :json }

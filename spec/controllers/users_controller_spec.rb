@@ -22,6 +22,7 @@ RSpec.describe UsersController, type: :controller do
   let(:subscibed_admin_user) {FactoryBot.create(:admin_subscribed_user)}
   let(:secondary_user) {FactoryBot.create(:secondary_user)}
   let(:secondary_unsubscribed_user) {FactoryBot.create(:secondary_unsubscribed_user)}
+  let(:archived_user) {FactoryBot.create(:archived_user)}
 
   after(:all) do
     User.delete_all
@@ -63,6 +64,25 @@ RSpec.describe UsersController, type: :controller do
       expect(error[:message]).to eq 'Mandatory Fields are empty'
     end
   end
+
+  describe "GET #index" do
+    before(:each) do
+      allow(controller).to receive(:authenticate!).and_return(true)
+      allow(controller).to receive(:current_login).and_return({ :user_id =>  subscibed_admin_user[:id]})
+      secondary_user
+      archived_user
+    end
+    after(:each) do
+      User.delete_all
+    end
+
+    it 'should get only non archived user' do
+      get :index
+      users = JSON.parse(response.body, {:symbolize_names => true})
+      expect(users.size).to be 2
+    end
+  end
+
   describe "PUT #update_password" do
     @user = nil
     before(:each) do
@@ -199,6 +219,31 @@ RSpec.describe UsersController, type: :controller do
       error = JSON.parse(response.body, {:symbolize_names => true})
       expect(response).to have_http_status(:bad_request)
       expect(error[:message]).to eq "Invalid request. Unable to update admin status."
+    end
+  end
+
+  describe "DELETE #archived" do
+    before(:each) do
+      allow(controller).to receive(:authenticate!).and_return(true)
+      allow(controller).to receive(:current_login).and_return({ :user_id =>  subscibed_admin_user[:id]})
+    end
+    after(:each) do
+      User.delete_all
+    end
+
+    it 'should make user archived from the application' do
+      delete :archive, :params => { id: secondary_user[:id] }
+      user = JSON.parse(response.body, {:symbolize_names => true})
+      expect(user[:first_name]).to eq(secondary_user[:first_name])
+      expect(user[:archived]).to be_truthy
+      expect(User.find(secondary_user[:id])[:is_archived]).to be_truthy
+    end
+
+    it 'should throw error if a user is already archived' do
+      delete :archive, :params => { id: archived_user[:id] }
+      error = JSON.parse(response.body, {:symbolize_names => true})
+      expect(error[:message]).to eq("#{archived_user[:first_name]} #{archived_user[:last_name]} is already archived")
+      expect(response).to have_http_status(:bad_request)
     end
   end
 end

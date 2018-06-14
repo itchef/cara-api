@@ -34,4 +34,10 @@ FactoryBot.define do
     password_digest Faker::Internet.password(10, 20)
     oauth2_token    Faker::Internet.password(32)
   end
+
+  factory :archived_user_login, class: Login do
+    identification  Faker::Internet.user_name
+    password_digest Faker::Internet.password(10, 20)
+    oauth2_token    Faker::Internet.password(32)
+  end
 end

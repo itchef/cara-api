@@ -22,6 +22,7 @@ FactoryBot.define do
     last_name          Faker::Name.last_name
     is_unsubscribed    false
     is_admin            true
+    is_archived         false
     association :login, factory: :subscribed_login
   end
 
@@ -29,7 +30,8 @@ FactoryBot.define do
     first_name         Faker::Name.first_name
     last_name          Faker::Name.last_name
     is_unsubscribed    false
-    is_admin           false
+    is_admin            false
+    is_archived         false
     association :login, factory: :secondary_user_login
   end
 
@@ -37,6 +39,17 @@ FactoryBot.define do
     first_name         Faker::Name.first_name
     last_name          Faker::Name.last_name
     is_unsubscribed    true
+    is_admin            false
+    is_archived         false
     association :login, factory: :secondary_unsubscribed_user_login
+  end
+
+  factory :archived_user, class: User do
+    first_name         Faker::Name.first_name
+    last_name          Faker::Name.last_name
+    is_unsubscribed    false
+    is_admin           true
+    is_archived        true
+    association :login, factory: :archived_user_login
   end
 end

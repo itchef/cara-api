@@ -22,11 +22,11 @@ class UsersController < ApplicationController
   include AbilityHelper
 
   before_action :authenticate!
-  before_action :set_user, only: [:update_password, :unsubscribe, :subscribe, :admin_status]
+  before_action :set_user, only: [:update_password, :unsubscribe, :subscribe, :admin_status, :archive]
 
   def index
     can_manage?
-    render json: User.all.map {|user| Oprah.present(user).json}
+    render json: User.all.where(:is_archived => false).map {|user| Oprah.present(user).json}
   end
 
   def create
@@ -86,6 +86,16 @@ class UsersController < ApplicationController
     end
   end
 
+  def archive
+    can_manage?
+    if @user[:is_archived]
+      render json: {message: "#{@user[:first_name]} #{@user[:last_name]} is already archived"}, :status => :bad_request
+    elsif @user.update_attributes(:is_archived => true, :is_unsubscribed => true)
+      render json: Oprah.present(@user).json
+    else
+      render json: {message: "Unable to archive user"}, :status => :bad_request
+    end
+  end
 
   private
 
