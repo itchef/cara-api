@@ -235,8 +235,7 @@ RSpec.describe UsersController, type: :controller do
       delete :archive, :params => { id: secondary_user[:id] }
       user = JSON.parse(response.body, {:symbolize_names => true})
       expect(user[:first_name]).to eq(secondary_user[:first_name])
-      expect(user[:archived]).to be_truthy
-      expect(User.find(secondary_user[:id])[:is_archived]).to be_truthy
+      expect(User.find_by(:is_archived => true)[:first_name]).to eq(secondary_user[:first_name])
     end
 
     it 'should throw error if a user is already archived' do

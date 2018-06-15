@@ -24,8 +24,7 @@ class UserPresenter < Oprah::Presenter
       last_name: last_name,
       username: login[:identification],
       unsubscribed: is_unsubscribed,
-      admin: is_admin,
-      archived: is_archived
+      admin: is_admin
     }
   end
 
@@ -34,8 +33,7 @@ class UserPresenter < Oprah::Presenter
       first_name: first_name,
       last_name: last_name,
       username: login[:identification],
-      admin: is_admin,
-      archived: is_archived
+      admin: is_admin
     }
   end
 end
