@@ -18,6 +18,8 @@
 
 class Group < ApplicationRecord
   validates :name, presence: true
+  has_many :group_member_maps, :dependent => :destroy
+
   def self.get_assigned_members_list(group_id)
     Member.select(:id, :name, :photo_url)
       .where(

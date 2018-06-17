@@ -20,6 +20,7 @@ class GroupsController < ApplicationController
   include RailsApiAuth::Authentication
   include AbilityHelper
   before_action :authenticate!
+  before_action :set_group, only: [:destroy]
 
   def index
     render json: Group.all.map {|group| Oprah.present(group).json }
@@ -57,6 +58,17 @@ class GroupsController < ApplicationController
     end
   end
 
+  def destroy
+    can_manage?
+    if @group.destroy
+      render json: @group, status: :ok
+    else
+      render json: {message: 'Group is unable to get deleted.', detailed_message: @group.errors.messages },
+             :status =>
+               :bad_request
+    end
+  end
+
   private
   def group_params
     params.require(:group).permit(:name, :description)
@@ -64,6 +76,10 @@ class GroupsController < ApplicationController
 
   def group_member_map_params
     params.permit(:group_id, :member_id)
+  end
+
+  def set_group
+    @group = Group.find(params[:id])
   end
 
 end
