@@ -20,10 +20,19 @@ require 'rails_helper'
 
 RSpec.describe Group, type: :model do
   describe "validations" do
-    it 'should should throw error when name is not present' do
+    after(:each) do
+      Group.delete_all
+    end
+    it 'should throw error when name is not present' do
       member = Group.create(:name => "", :description => Faker::Lorem.sentence)
       expect(member.valid?).to be_falsy
       expect(member.errors.messages).to eq({ :name=> ["can't be blank"] })
+    end
+
+    it 'should throw uniqueness validation error when group name is duplicated' do
+      Group.create(:name => "Group 1", :description => Faker::Lorem.sentence)
+      group = Group.new(:name => "Group 1", :description => Faker::Lorem.sentence)
+      expect(group).to_not be_valid
     end
   end
 

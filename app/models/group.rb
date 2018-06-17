@@ -17,7 +17,7 @@
 # @author: Kaustav Chakraborty (@phoenixTW)
 
 class Group < ApplicationRecord
-  validates :name, presence: true
+  validates :name, presence: true, uniqueness: true
   has_many :group_member_maps, :dependent => :destroy
 
   def self.get_assigned_members_list(group_id)
