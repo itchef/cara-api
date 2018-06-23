@@ -27,7 +27,6 @@ gemfile:
   - Gemfile
 
 before_script:
-  - dropuser $CARA_API_DATABASE_USERNAME -U postgres
   - createuser -d -U postgres $CARA_API_DATABASE_USERNAME
 
 script:
