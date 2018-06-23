@@ -27,6 +27,8 @@ gemfile:
   - Gemfile
 
 before_script:
+  - RAILS_ENV=test bin/rails db:drop
+  - dropuser $CARA_API_DATABASE_USERNAME -U postgres
   - createuser -d -U postgres $CARA_API_DATABASE_USERNAME
 
 script:
@@ -34,9 +36,6 @@ script:
   - RAILS_ENV=test bin/rails db:drop db:create db:migrate
   - bin/bundle exec rspec
 
-after_script:
-  - RAILS_ENV=test bin/rails db:drop
-  - dropuser $CARA_API_DATABASE_USERNAME -U postgres
 deploy:
   provider: heroku
   api_key: $HEROKU_API_KEY
