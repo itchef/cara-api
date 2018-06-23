@@ -37,5 +37,15 @@ script:
 after_script:
   - RAILS_ENV=test bin/rails db:drop
   - dropuser $CARA_API_DATABASE_USERNAME -U postgres
+deploy:
+  provider: heroku
+  api_key: $HEROKU_API_KEY
+  app: cara-staging-api
+  on:
+    branch: staging
+  run:
+    - "bin/rails db:migrate"
+    - "bin/rails db:seed"
+
 notifications:
   email: false
