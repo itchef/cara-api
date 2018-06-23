@@ -24,7 +24,18 @@ RSpec.describe UsersController, type: :controller do
   let(:secondary_unsubscribed_user) {FactoryBot.create(:secondary_unsubscribed_user)}
   let(:archived_user) {FactoryBot.create(:archived_user)}
 
+  let(:subscribed_login) {FactoryBot.create(:subscribed_login, :user => subscibed_admin_user)}
+  let(:secondary_user_login) {FactoryBot.create(:secondary_user_login, :user => secondary_user)}
+  let(:secondary_unsubscribed_user_login) {FactoryBot.create(:secondary_unsubscribed_user_login, :user => secondary_unsubscribed_user)}
+  let(:archived_user_login) {FactoryBot.create(:archived_user_login, :user => archived_user)}
+
+  subscibed_admin_user = nil
+  secondary_user = nil
+  secondary_unsubscribed_user = nil
+  archived_user = nil
+
   after(:all) do
+    Login.delete_all
     User.delete_all
   end
 
@@ -39,8 +50,9 @@ RSpec.describe UsersController, type: :controller do
         last_name: 'Smith',
         is_admin: true
       }
+      subscribed_login
       allow(controller).to receive(:authenticate!).and_return(true)
-      allow(controller).to receive(:current_login).and_return({ :user_id =>  subscibed_admin_user[:id]})
+      allow(controller).to receive(:current_login).and_return({ :user_id => subscribed_login.user[:id]})
     end
     after(:each) do
       User.delete_all
@@ -67,10 +79,11 @@ RSpec.describe UsersController, type: :controller do
 
   describe "GET #index" do
     before(:each) do
+      subscribed_login
       allow(controller).to receive(:authenticate!).and_return(true)
-      allow(controller).to receive(:current_login).and_return({ :user_id =>  subscibed_admin_user[:id]})
-      secondary_user
-      archived_user
+      allow(controller).to receive(:current_login).and_return({ :user_id =>  subscribed_login.user[:id]})
+      secondary_user = secondary_user_login.user
+      archived_user = archived_user_login.user
     end
     after(:each) do
       User.delete_all
@@ -86,8 +99,13 @@ RSpec.describe UsersController, type: :controller do
   describe "PUT #update_password" do
     @user = nil
     before(:each) do
+      subscribed_login
+      secondary_user_login
       allow(controller).to receive(:authenticate!).and_return(true)
-      allow(controller).to receive(:current_login).and_return({ :user_id =>  subscibed_admin_user[:id]})
+      allow(controller).to receive(:current_login).and_return({ :user_id =>  subscribed_login.user[:id]})
+
+      subscibed_admin_user = subscribed_login.user
+      secondary_user = secondary_user_login.user
     end
     after(:each) do
       User.delete_all
@@ -119,8 +137,11 @@ RSpec.describe UsersController, type: :controller do
   end
   describe "GET #unsubscribe" do
     before(:each) do
+      subscribed_login
+      secondary_user_login
       allow(controller).to receive(:authenticate!).and_return(true)
-      allow(controller).to receive(:current_login).and_return({ :user_id =>  subscibed_admin_user[:id]})
+      allow(controller).to receive(:current_login).and_return({ :user_id =>  subscribed_login.user[:id]})
+      secondary_user = secondary_user_login.user
       get :unsubscribe, :params => {:id => secondary_user[:id]}
     end
     after(:each) do
@@ -141,8 +162,12 @@ RSpec.describe UsersController, type: :controller do
 
   describe "GET #subscribe" do
     before(:each) do
+      subscribed_login
+      secondary_user_login
       allow(controller).to receive(:authenticate!).and_return(true)
-      allow(controller).to receive(:current_login).and_return({ :user_id =>  subscibed_admin_user[:id]})
+      allow(controller).to receive(:current_login).and_return({ :user_id =>  subscribed_login.user[:id]})
+      secondary_user = secondary_user_login.user
+      secondary_unsubscribed_user = secondary_unsubscribed_user_login.user
     end
     after(:each) do
       User.delete_all
@@ -163,8 +188,11 @@ RSpec.describe UsersController, type: :controller do
 
   describe "PUT #admin_status" do
     before(:each) do
+      subscribed_login
+      secondary_user_login
       allow(controller).to receive(:authenticate!).and_return(true)
-      allow(controller).to receive(:current_login).and_return({ :user_id =>  subscibed_admin_user[:id]})
+      allow(controller).to receive(:current_login).and_return({ :user_id =>  subscribed_login.user[:id]})
+      secondary_user = secondary_user_login.user
     end
     after(:each) do
       User.delete_all
@@ -224,8 +252,11 @@ RSpec.describe UsersController, type: :controller do
 
   describe "DELETE #archived" do
     before(:each) do
+      subscribed_login
+      secondary_user_login
       allow(controller).to receive(:authenticate!).and_return(true)
-      allow(controller).to receive(:current_login).and_return({ :user_id =>  subscibed_admin_user[:id]})
+      allow(controller).to receive(:current_login).and_return({ :user_id =>  subscribed_login.user[:id]})
+      secondary_user = secondary_user_login.user
     end
     after(:each) do
       User.delete_all
@@ -239,6 +270,7 @@ RSpec.describe UsersController, type: :controller do
     end
 
     it 'should throw error if a user is already archived' do
+      archived_user = archived_user_login.user
       delete :archive, :params => { id: archived_user[:id] }
       error = JSON.parse(response.body, {:symbolize_names => true})
       expect(error[:message]).to eq("#{archived_user[:first_name]} #{archived_user[:last_name]} is already archived")

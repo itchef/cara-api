@@ -21,23 +21,27 @@ FactoryBot.define do
     identification  Faker::Internet.user_name
     password_digest Faker::Internet.password(10, 20)
     oauth2_token    Faker::Internet.password(32)
+    user            { User.first || association(:admin_subscribed_user) }
   end
 
   factory :secondary_user_login, class: Login do
     identification  Faker::Internet.user_name
     password_digest Faker::Internet.password(10, 20)
     oauth2_token    Faker::Internet.password(32)
+    user            { User.first || association(:secondary_user) }
   end
 
   factory :secondary_unsubscribed_user_login, class: Login do
     identification  Faker::Internet.user_name
     password_digest Faker::Internet.password(10, 20)
     oauth2_token    Faker::Internet.password(32)
+    user            { User.first || association(:secondary_unsubscribed_user) }
   end
 
   factory :archived_user_login, class: Login do
     identification  Faker::Internet.user_name
     password_digest Faker::Internet.password(10, 20)
     oauth2_token    Faker::Internet.password(32)
+    user            { User.first || association(:archived_user) }
   end
 end
