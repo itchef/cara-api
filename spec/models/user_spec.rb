@@ -19,11 +19,12 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  let(:subscibed_admin_user) {FactoryBot.create(:admin_subscribed_user)}
-  let(:secondary_user) {FactoryBot.create(:secondary_user)}
+  let(:subscribed_login) {FactoryBot.create(:subscribed_login)}
+  subscibed_admin_user = nil
 
   describe "find_by_username" do
     before(:each) do
+      subscibed_admin_user = subscribed_login.user
     end
 
     after(:each) do

@@ -23,7 +23,6 @@ FactoryBot.define do
     is_unsubscribed    false
     is_admin            true
     is_archived         false
-    association :login, factory: :subscribed_login
   end
 
   factory :secondary_user, class: User do
@@ -32,7 +31,6 @@ FactoryBot.define do
     is_unsubscribed    false
     is_admin            false
     is_archived         false
-    association :login, factory: :secondary_user_login
   end
 
   factory :secondary_unsubscribed_user, class: User do
@@ -41,7 +39,6 @@ FactoryBot.define do
     is_unsubscribed    true
     is_admin            false
     is_archived         false
-    association :login, factory: :secondary_unsubscribed_user_login
   end
 
   factory :archived_user, class: User do
@@ -50,6 +47,5 @@ FactoryBot.define do
     is_unsubscribed    false
     is_admin           true
     is_archived        true
-    association :login, factory: :archived_user_login
   end
 end
