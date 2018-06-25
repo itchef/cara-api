@@ -18,4 +18,5 @@
 
 RailsApiAuth.tap do |raa|
   raa.user_model_relation = :user
+  raa.edx_domain = ''
 end

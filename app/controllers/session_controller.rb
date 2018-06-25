@@ -16,7 +16,7 @@
 
 # @author: Kaustav Chakraborty (@phoenixTW)
 
-class SessionController < RailsApiAuth::Oauth2Controller
+class SessionController < Oauth2Controller
   def create
     user = User.find_by_username(params[:username])
     if user && user[:is_unsubscribed]
