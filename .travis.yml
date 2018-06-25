@@ -41,6 +41,7 @@ deploy:
   on:
     branch: staging
   run:
+    - "bin/rails db:reset"
     - "bin/rails db:migrate"
     - "bin/rails db:seed"
 
