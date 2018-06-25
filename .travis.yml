@@ -41,7 +41,6 @@ deploy:
   on:
     branch: staging
   run:
-    - "DISABLE_DATABASE_ENVIRONMENT_CHECK=1 bin/rails db:reset"
     - "bin/rails db:migrate"
     - "bin/rails db:seed"
 
